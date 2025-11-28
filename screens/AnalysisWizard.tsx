@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Analysis, AnalysisStage, CategoryType } from '../types';
 import { getAnalysisById, createEmptyAnalysis, saveAnalysis } from '../services/storage';
@@ -21,6 +21,10 @@ const AnalysisWizard: React.FC = () => {
 
   const [showHint, setShowHint] = useState(false);
   const [showContext, setShowContext] = useState(false);
+  
+  // State for stable feedback text
+  const [feedbackText, setFeedbackText] = useState('');
+
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   // Initialize or Load
@@ -54,9 +58,8 @@ const AnalysisWizard: React.FC = () => {
       if (textareaRef.current) textareaRef.current.focus();
   }, [analysis?.stage]);
 
-  if (!analysis) return <div className="p-10 text-center text-text-muted">{t.wizard.loading}</div>;
-
   const getCurrentQuestion = () => {
+    if (!analysis) return null;
     if (analysis.stage === AnalysisStage.MODULES) {
       // Find first unanswered question in structure order
       const nextQ = QUESTION_STRUCTURE.find(q => !analysis.answers.some(a => a.questionId === q.id));
@@ -65,11 +68,21 @@ const AnalysisWizard: React.FC = () => {
     return null;
   };
 
+  // Update feedback text only when the question changes
+  const currentQuestion = getCurrentQuestion();
+  useEffect(() => {
+      if (analysis?.stage === AnalysisStage.MODULES && currentQuestion) {
+          const randomFeedback = t.feedback[Math.floor(Math.random() * t.feedback.length)];
+          setFeedbackText(randomFeedback);
+      }
+  }, [currentQuestion?.id, analysis?.stage, t.feedback]);
+
+  if (!analysis) return <div className="p-10 text-center text-text-muted">{t.wizard.loading}</div>;
+
   const handleSaveAndExit = () => {
      if (analysis) {
          // Save current progress locally before exiting
          const updated = { ...analysis, updatedAt: Date.now() };
-         // We might need to capture the partial text typed
          saveAnalysis(updated);
          navigate('/');
      }
@@ -91,9 +104,7 @@ const AnalysisWizard: React.FC = () => {
                   // Remove last answer
                   const lastAns = analysis.answers[analysis.answers.length - 1];
                   updated.answers = analysis.answers.slice(0, -1);
-                  // Current input should probably be the text of that answer to edit it?
-                  // For simplicity, clear input to re-answer, or ideally load it.
-                  // Let's try to load it:
+                  // Load the previous answer so user can edit it
                   setCurrentInput(lastAns.text);
               }
               break;
@@ -257,7 +268,6 @@ const AnalysisWizard: React.FC = () => {
       if (!questionStruct) return <div>{t.wizard.loading}</div>;
       
       const qData = t.questions[questionStruct.id];
-      const randomFeedback = t.feedback[Math.floor(Math.random() * t.feedback.length)];
       const qIndex = QUESTION_STRUCTURE.findIndex(q => q.id === questionStruct.id) + 1;
 
       return (
@@ -299,8 +309,8 @@ const AnalysisWizard: React.FC = () => {
             )}
 
             {analysis.answers.length > 0 && (
-                <div className="text-xs text-text-muted mt-4 text-center italic">
-                    "{randomFeedback}"
+                <div className="text-xs text-text-muted mt-4 text-center italic transition-opacity duration-300">
+                    "{feedbackText}"
                 </div>
             )}
         </div>
@@ -399,17 +409,17 @@ const AnalysisWizard: React.FC = () => {
          {analysis.stage === AnalysisStage.STRATEGY && renderStrategy()}
          {analysis.stage === AnalysisStage.RISKS && renderRisks()}
 
-         <div className="fixed bottom-20 left-0 right-0 px-4 max-w-2xl mx-auto flex gap-2">
+         <div className="fixed bottom-20 left-0 right-0 px-4 max-w-2xl mx-auto flex gap-3">
             {/* Back Button - Only show if not in very first state */}
             {!(analysis.stage === AnalysisStage.INIT && !analysis.title) && (
-                <Button variant="secondary" onClick={handleBack} className="w-14 flex-shrink-0">
-                    <ChevronLeft />
+                <Button variant="secondary" onClick={handleBack} className="px-5 py-4 flex-shrink-0">
+                    <ChevronLeft size={28} />
                 </Button>
             )}
 
             {/* Save & Exit Button */}
-            <Button variant="outline" onClick={handleSaveAndExit} className="w-14 flex-shrink-0">
-                <Save size={20} />
+            <Button variant="outline" onClick={handleSaveAndExit} className="px-5 py-4 flex-shrink-0">
+                <Save size={24} />
             </Button>
 
             <Button 
@@ -417,11 +427,11 @@ const AnalysisWizard: React.FC = () => {
                 fullWidth 
                 onClick={handleNext}
                 disabled={isButtonDisabled()}
-                className="shadow-xl flex-grow"
+                className="shadow-xl flex-grow py-4"
             >
-                <span className="flex items-center">
+                <span className="flex items-center text-lg">
                     {getButtonText()} 
-                    {analysis.stage === AnalysisStage.RISKS ? <Check className="ml-2" /> : <ArrowRight className="ml-2" />}
+                    {analysis.stage === AnalysisStage.RISKS ? <Check className="ml-2" size={24} /> : <ArrowRight className="ml-2" size={24} />}
                 </span>
             </Button>
          </div>
