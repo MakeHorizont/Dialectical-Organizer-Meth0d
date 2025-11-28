@@ -1,0 +1,50 @@
+@echo off
+title Installing Meth0d...
+
+echo ==========================================
+echo      INSTALLING Meth0d
+echo ==========================================
+echo.
+
+:: Check Node.js
+node -v >nul 2>&1
+if %errorlevel% neq 0 (
+    echo [ERROR] Node.js is not installed!
+    echo Please download and install Node.js from https://nodejs.org/
+    echo Then run this file again.
+    pause
+    exit
+)
+
+echo 1. Installing dependencies (this may take a minute)...
+call npm install
+if %errorlevel% neq 0 (
+    echo [ERROR] Failed to install dependencies. Check your internet connection.
+    pause
+    exit
+)
+
+echo.
+echo 2. Building application...
+call npm run build
+if %errorlevel% neq 0 (
+    echo [ERROR] Build failed.
+    pause
+    exit
+)
+
+:: Verify build
+if not exist "dist\index.html" (
+    echo [ERROR] Build finished but dist/index.html is missing.
+    echo Something went wrong.
+    pause
+    exit
+)
+
+echo.
+echo ==========================================
+echo      INSTALLATION SUCCESSFUL
+echo ==========================================
+echo You can now run the app using run_meth0d.bat
+echo.
+pause

@@ -1,0 +1,89 @@
+@echo off
+title Meth0d Builder Protocol
+:: Clear previous log
+echo METH0D BUILDER LOG > build_log.txt
+echo Started at: %date% %time% >> build_log.txt
+echo ========================================== >> build_log.txt
+
+echo ==========================================
+echo      METH0D BUILDER PROTOCOL
+echo ==========================================
+echo.
+echo All operations are being logged to: build_log.txt
+echo Please wait...
+echo.
+
+:: --- PHASE 0: FILE CHECK ---
+echo [PHASE 0] Checking file integrity...
+echo [PHASE 0] Checking file integrity... >> build_log.txt
+
+if exist "electron-main.cjs.txt" (
+    echo [AUTO-FIX] Found 'electron-main.cjs.txt'. Renaming to 'electron-main.cjs'...
+    echo [AUTO-FIX] Renaming electron-main.cjs.txt >> build_log.txt
+    ren "electron-main.cjs.txt" "electron-main.cjs" >> build_log.txt 2>&1
+)
+
+if not exist "electron-main.cjs" (
+    echo [ERROR] Critical file 'electron-main.cjs' is missing!
+    echo [ERROR] Critical file 'electron-main.cjs' is missing! >> build_log.txt
+    echo Please ensure all files are in the same folder.
+    pause
+    exit /b
+)
+
+:: --- PHASE 1: NODE.JS CHECK ---
+echo [PHASE 1] Checking Node.js environment...
+echo [PHASE 1] Checking Node.js environment... >> build_log.txt
+node -v >> build_log.txt 2>&1
+
+if %errorlevel% neq 0 (
+    echo [CRITICAL ERROR] Node.js is NOT installed or not in PATH.
+    echo [CRITICAL ERROR] Node.js is NOT installed. >> build_log.txt
+    echo Please install Node.js from https://nodejs.org/
+    pause
+    exit /b
+)
+
+:: --- PHASE 2: DEPENDENCIES ---
+echo [PHASE 2] Installing dependencies (npm install)...
+echo [PHASE 2] Installing dependencies... >> build_log.txt
+echo This might take a few minutes. Check build_log.txt for progress.
+
+call npm install >> build_log.txt 2>&1
+
+if %errorlevel% neq 0 (
+    echo [ERROR] Dependency installation failed.
+    echo [ERROR] npm install failed. >> build_log.txt
+    echo Check build_log.txt for specific error messages.
+    pause
+    exit /b
+)
+
+:: --- PHASE 3: BUILD ---
+echo [PHASE 3] Building Windows Executable...
+echo [PHASE 3] Building Windows Executable... >> build_log.txt
+echo This involves compiling React and packaging Electron.
+echo Please be patient.
+
+call npm run electron:build >> build_log.txt 2>&1
+
+if %errorlevel% neq 0 (
+    echo [ERROR] Build process failed.
+    echo [ERROR] Build process failed. >> build_log.txt
+    echo Check build_log.txt for specific error messages.
+    pause
+    exit /b
+)
+
+:: --- SUCCESS ---
+echo.
+echo ==========================================
+echo      OPERATION SUCCESSFUL
+echo ==========================================
+echo.
+echo [SUCCESS] Operation finished successfully. >> build_log.txt
+echo.
+echo Please check the "Install_files" folder.
+echo You should see the setup .exe file there.
+echo.
+pause

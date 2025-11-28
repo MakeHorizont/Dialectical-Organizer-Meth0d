@@ -1,0 +1,48 @@
+
+@echo off
+title Installing Meth0d to System...
+
+echo ==========================================
+echo      METH0D SYSTEM INSTALLER
+echo ==========================================
+echo.
+echo This script will create shortcuts on your Desktop and Start Menu.
+echo.
+
+set "APP_DIR=%CD%"
+set "ICON_PATH=%APP_DIR%\public\vite.svg" 
+:: Fallback icon if vite.svg doesn't exist, though typically we'd ship a .ico
+if not exist "%ICON_PATH%" set "ICON_PATH=shell32.dll,0"
+
+:: Create PowerShell script to generate shortcuts
+set "PS_SCRIPT=%TEMP%\create_shortcut.ps1"
+
+echo $WshShell = New-Object -comObject WScript.Shell > "%PS_SCRIPT%"
+
+:: Desktop Shortcut
+echo $DesktopPath = [Environment]::GetFolderPath("Desktop") >> "%PS_SCRIPT%"
+echo $Shortcut = $WshShell.CreateShortcut("$DesktopPath\Meth0d.lnk") >> "%PS_SCRIPT%"
+echo $Shortcut.TargetPath = "%APP_DIR%\run_meth0d.bat" >> "%PS_SCRIPT%"
+echo $Shortcut.WorkingDirectory = "%APP_DIR%" >> "%PS_SCRIPT%"
+echo $Shortcut.IconLocation = "%ICON_PATH%" >> "%PS_SCRIPT%"
+echo $Shortcut.Description = "Dialectical Organizer" >> "%PS_SCRIPT%"
+echo $Shortcut.Save() >> "%PS_SCRIPT%"
+
+:: Start Menu Shortcut
+echo $StartMenuPath = "$env:APPDATA\Microsoft\Windows\Start Menu\Programs" >> "%PS_SCRIPT%"
+echo $Shortcut = $WshShell.CreateShortcut("$StartMenuPath\Meth0d.lnk") >> "%PS_SCRIPT%"
+echo $Shortcut.TargetPath = "%APP_DIR%\run_meth0d.bat" >> "%PS_SCRIPT%"
+echo $Shortcut.WorkingDirectory = "%APP_DIR%" >> "%PS_SCRIPT%"
+echo $Shortcut.IconLocation = "%ICON_PATH%" >> "%PS_SCRIPT%"
+echo $Shortcut.Description = "Dialectical Organizer" >> "%PS_SCRIPT%"
+echo $Shortcut.Save() >> "%PS_SCRIPT%"
+
+echo Creating shortcuts...
+powershell -ExecutionPolicy Bypass -File "%PS_SCRIPT%"
+del "%PS_SCRIPT%"
+
+echo.
+echo [SUCCESS] Shortcuts created!
+echo You can now find Meth0d on your Desktop and Start Menu.
+echo.
+pause

@@ -1,0 +1,135 @@
+
+import React, { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { getAnalysisById, archiveAnalysis } from '../services/storage';
+import { Analysis } from '../types';
+import { TopBar } from '../components/Navbar';
+import { Button } from '../components/Button';
+import { Archive, Edit3, Share2, FileText, ShieldAlert, Target } from 'lucide-react';
+import { useLanguage } from '../contexts/LanguageContext';
+
+const AnalysisView: React.FC = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const { t } = useLanguage();
+  const [analysis, setAnalysis] = useState<Analysis | null>(null);
+
+  useEffect(() => {
+    if (id) {
+      const data = getAnalysisById(id);
+      if (data) setAnalysis(data);
+    }
+  }, [id]);
+
+  if (!analysis) return null;
+
+  // Helper to get label
+  const getCategoryLabel = (qId: string) => t.questions[qId]?.categoryLabel || qId;
+
+  const handleArchive = () => {
+      if (window.confirm(t.view.confirmArchive)) {
+          archiveAnalysis(analysis.id);
+          navigate('/');
+      }
+  };
+
+  const handleShare = () => {
+     const text = `PROTOCOL: ${analysis.title}\n\nCONTRADICTION: ${analysis.synthesis}\nSTRATEGY: ${analysis.opportunities}`;
+     if (navigator.share) {
+         navigator.share({
+             title: analysis.title,
+             text: text,
+         }).catch(console.error);
+     } else {
+         navigator.clipboard.writeText(text);
+         alert(t.view.shareSuccess);
+     }
+  };
+
+  return (
+    <>
+      <TopBar title={t.view.briefingTitle} showBack />
+      <div className="max-w-2xl mx-auto p-4 space-y-6 animate-fade-in pb-24">
+        
+        <div className="flex justify-between items-center mb-2">
+            <span className="bg-secondary text-text-inverted text-xs font-mono px-2 py-1 rounded">
+                REF: {analysis.id.slice(0,8).toUpperCase()}
+            </span>
+            <span className="text-xs text-text-muted font-mono">
+                {new Date(analysis.createdAt).toLocaleDateString()}
+            </span>
+        </div>
+
+        {/* OBJECT */}
+        <section className="bg-surface rounded-lg p-4 border-l-4 border-text-muted shadow-sm">
+            <h3 className="text-xs font-bold text-text-muted uppercase tracking-wider mb-2">{t.view.objectLabel}</h3>
+            <p className="text-text-main font-medium">{analysis.title}</p>
+            <p className="text-sm text-text-muted mt-1 italic">{analysis.thesis}</p>
+        </section>
+
+        {/* CENTRAL CONTRADICTION */}
+        <section className="bg-secondary text-text-inverted rounded-xl p-6 shadow-lg ring-4 ring-primary/10 relative overflow-hidden">
+            <div className="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-primary opacity-20 rounded-full blur-xl"></div>
+            <h3 className="text-xs font-bold text-text-inverted/70 uppercase tracking-wider mb-3 flex items-center">
+                 <FileText size={14} className="mr-2"/> {t.view.contradictionLabel}
+            </h3>
+            <p className="text-xl font-serif font-medium leading-relaxed">"{analysis.synthesis}"</p>
+        </section>
+
+        {/* STRATEGY SECTION */}
+        <div className="grid gap-4 md:grid-cols-2">
+             {/* Vulnerabilities */}
+            <div className="bg-danger/5 rounded-lg p-4 border border-danger/20">
+                <h4 className="text-xs font-bold text-danger uppercase mb-2 flex items-center">
+                    <Target size={14} className="mr-1"/> {t.wizard.vulnLabel}
+                </h4>
+                <p className="text-sm text-text-main">{analysis.vulnerabilities || "N/A"}</p>
+            </div>
+
+            {/* Opportunities */}
+            <div className="bg-success/5 rounded-lg p-4 border border-success/20">
+                <h4 className="text-xs font-bold text-success uppercase mb-2 flex items-center">
+                    <Target size={14} className="mr-1"/> {t.wizard.oppLabel}
+                </h4>
+                <p className="text-sm text-text-main">{analysis.opportunities || "N/A"}</p>
+            </div>
+        </div>
+
+        {/* RISKS */}
+        {analysis.risks && (
+            <section className="bg-surface-highlight rounded-lg p-4 border-l-4 border-warning">
+                 <h3 className="text-xs font-bold text-warning uppercase tracking-wider mb-2 flex items-center">
+                    <ShieldAlert size={14} className="mr-2"/> {t.view.risksTitle}
+                 </h3>
+                 <p className="text-sm text-text-muted">{analysis.risks}</p>
+            </section>
+        )}
+
+        {/* MODULE DATA ACCORDION (Simplified) */}
+        <div className="space-y-2 mt-8">
+            <h3 className="text-xs font-bold text-text-muted uppercase px-2">{t.view.modulesTitle}</h3>
+            {analysis.answers.map((ans, idx) => (
+                <div key={idx} className="bg-surface rounded px-4 py-3 border border-surface-highlight">
+                    <p className="text-[10px] text-primary font-bold uppercase mb-1">{getCategoryLabel(ans.questionId)}</p>
+                    <p className="text-sm text-text-main">{ans.text}</p>
+                </div>
+            ))}
+        </div>
+
+        <div className="grid grid-cols-2 gap-4 pt-4">
+            <Button variant="secondary" onClick={() => navigate(`/edit/${analysis.id}`)}>
+                <Edit3 size={18} className="mr-2" /> {t.view.btnEdit}
+            </Button>
+            <Button variant="outline" onClick={handleShare}>
+                <Share2 size={18} className="mr-2" /> {t.view.btnShare}
+            </Button>
+            <Button variant="ghost" className="col-span-2 text-danger hover:bg-danger/10" onClick={handleArchive}>
+                <Archive size={18} className="mr-2" /> {t.view.btnArchive}
+            </Button>
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default AnalysisView;

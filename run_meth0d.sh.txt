@@ -1,0 +1,34 @@
+
+#!/bin/bash
+
+# Meth0d Launcher for Unix-like systems (Linux/macOS)
+
+# Ensure we are in the script's directory
+cd "$(dirname "$0")"
+
+echo "=========================================="
+echo "      STARTING Meth0d"
+echo "=========================================="
+echo ""
+
+if [ ! -d "dist" ] || [ ! -f "dist/index.html" ]; then
+    echo "[ERROR] 'dist' folder or index.html not found."
+    echo "Please run the setup command (npm run build) first."
+    exit 1
+fi
+
+echo "Starting local server..."
+echo "The browser should open automatically at http://localhost:3000"
+echo ""
+echo "[IMPORTANT] Keep this terminal window OPEN while using the app!"
+echo ""
+
+# Try to open the browser (cross-platform compatible)
+if which xdg-open > /dev/null; then
+  sleep 2 && xdg-open http://localhost:3000 &
+elif which open > /dev/null; then
+  sleep 2 && open http://localhost:3000 &
+fi
+
+# Run the server
+npx serve -s dist -l 3000

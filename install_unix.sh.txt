@@ -1,0 +1,62 @@
+
+#!/bin/bash
+
+# Meth0d System Installer for Unix (Linux/macOS)
+
+APP_DIR="$(cd "$(dirname "$0")" && pwd)"
+ICON_PATH="$APP_DIR/public/vite.svg" # Assuming this exists or generic
+RUN_SCRIPT="$APP_DIR/run_meth0d.sh"
+
+# Make sure the run script is executable
+chmod +x "$RUN_SCRIPT"
+
+echo "=========================================="
+echo "      METH0D SYSTEM INSTALLER"
+echo "=========================================="
+echo "Detected Directory: $APP_DIR"
+echo ""
+
+if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+    # LINUX INSTALLATION
+    echo "Detected OS: Linux"
+    
+    DESKTOP_FILE="$HOME/.local/share/applications/meth0d.desktop"
+    mkdir -p "$HOME/.local/share/applications"
+
+    echo "[Desktop Entry]" > "$DESKTOP_FILE"
+    echo "Name=Meth0d" >> "$DESKTOP_FILE"
+    echo "Comment=Dialectical Organizer" >> "$DESKTOP_FILE"
+    echo "Exec=\"$RUN_SCRIPT\"" >> "$DESKTOP_FILE"
+    echo "Icon=$ICON_PATH" >> "$DESKTOP_FILE"
+    echo "Terminal=true" >> "$DESKTOP_FILE"
+    echo "Type=Application" >> "$DESKTOP_FILE"
+    echo "Categories=Office;Utility;" >> "$DESKTOP_FILE"
+
+    # Make it executable just in case
+    chmod +x "$DESKTOP_FILE"
+    
+    echo "[SUCCESS] Created $DESKTOP_FILE"
+    echo "You can now find Meth0d in your application menu."
+
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+    # MACOS INSTALLATION
+    echo "Detected OS: macOS"
+    
+    # Create a .command file on Desktop (clickable script)
+    DESKTOP_LINK="$HOME/Desktop/Meth0d.command"
+    
+    echo "#!/bin/bash" > "$DESKTOP_LINK"
+    echo "cd \"$APP_DIR\"" >> "$DESKTOP_LINK"
+    echo "./run_meth0d.sh" >> "$DESKTOP_LINK"
+    
+    chmod +x "$DESKTOP_LINK"
+    
+    echo "[SUCCESS] Created $DESKTOP_LINK"
+    echo "You can now launch Meth0d from your Desktop."
+    
+else
+    echo "[ERROR] Unsupported OS for automatic shortcut creation."
+    echo "You can still run the app manually using ./run_meth0d.sh"
+fi
+
+echo ""

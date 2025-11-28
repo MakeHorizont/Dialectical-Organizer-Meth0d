@@ -1,0 +1,22 @@
+@echo off
+title Rename Helper for Meth0d
+
+echo [INFO] This script will remove the .txt extension from script files.
+echo This makes them executable.
+
+echo.
+echo [ACTION] Renaming .bat.txt files...
+for %%f in (*.bat.txt) do (
+    ren "%%f" "%%~nf"
+)
+
+echo [ACTION] Renaming .sh.txt files...
+for %%f in (*.sh.txt) do (
+    ren "%%f" "%%~nf"
+)
+
+echo [SUCCESS] Files are ready.
+echo.
+echo [IMPORTANT] If you are on Mac/Linux, run: chmod +x *.sh
+echo.
+pause
