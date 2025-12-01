@@ -19,8 +19,15 @@ export const Navbar: React.FC = () => {
       isActive(path) ? 'text-primary' : 'text-text-muted hover:text-primary/70'
     }`;
 
-  // Don't show bottom nav on tutorial or language selection
-  if (location.pathname === '/tutorial' || location.pathname === '/language') return null;
+  // Don't show bottom nav on tutorial, language selection, or WIZARD screens (New/Edit)
+  // This prevents double bottom bars and distraction during analysis
+  // Logic updated to ensure it catches all edit sub-routes strictly
+  if (
+    location.pathname === '/tutorial' || 
+    location.pathname === '/language' || 
+    location.pathname === '/new' || 
+    location.pathname.startsWith('/edit')
+  ) return null;
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 bg-surface border-t border-surface-highlight pb-safe pt-1 px-6 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] z-50">
@@ -77,7 +84,7 @@ export const TopBar: React.FC<TopBarProps> = ({ title, showBack, showSettings })
     }, []);
 
     return (
-        <header className="sticky top-0 bg-surface/90 backdrop-blur-md z-40 border-b border-primary/10 px-4 py-3">
+        <header className="sticky top-0 bg-surface/90 backdrop-blur-md z-40 border-b border-primary/10 px-4 py-3 no-print">
             <div className="max-w-2xl mx-auto flex items-center justify-between">
                <div className="flex items-center w-1/5">
                   {showBack && (

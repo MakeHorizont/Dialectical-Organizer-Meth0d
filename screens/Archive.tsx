@@ -5,13 +5,14 @@ import { Analysis } from '../types';
 import { TopBar } from '../components/Navbar';
 import { Card } from '../components/Card';
 import { Button } from '../components/Button';
-import { RefreshCw, Trash2, Download, Upload } from 'lucide-react';
+import { RefreshCw, Trash2, Download, Upload, FileJson } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 
 const Archive: React.FC = () => {
   const [archivedItems, setArchivedItems] = useState<Analysis[]>([]);
   const { t } = useLanguage();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isDragging, setIsDragging] = useState(false);
 
   const loadData = () => {
     const all = getAnalyses();
@@ -34,14 +35,7 @@ const Archive: React.FC = () => {
       loadData();
   };
 
-  const handleImportClick = () => {
-      fileInputRef.current?.click();
-  };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files?.[0];
-      if (!file) return;
-
+  const processFile = (file: File) => {
       const reader = new FileReader();
       reader.onload = (event) => {
           const content = event.target?.result as string;
@@ -49,16 +43,42 @@ const Archive: React.FC = () => {
               const success = importData(content);
               if (success) {
                   alert(t.archive.importSuccess);
-                  loadData(); // Reload to see merged data (if archived)
-                  window.location.reload(); // Hard reload to ensure all states update
+                  loadData(); 
+                  window.location.reload();
               } else {
                   alert(t.archive.importError);
               }
           }
       };
       reader.readAsText(file);
-      // Reset input
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (file) processFile(file);
       e.target.value = '';
+  };
+
+  // Drag and Drop Handlers
+  const onDragOver = (e: React.DragEvent) => {
+      e.preventDefault();
+      setIsDragging(true);
+  };
+
+  const onDragLeave = (e: React.DragEvent) => {
+      e.preventDefault();
+      setIsDragging(false);
+  };
+
+  const onDrop = (e: React.DragEvent) => {
+      e.preventDefault();
+      setIsDragging(false);
+      const file = e.dataTransfer.files[0];
+      if (file && file.name.endsWith('.json')) {
+          processFile(file);
+      } else {
+          alert("Please drop a valid .json file");
+      }
   };
 
   return (
@@ -71,23 +91,37 @@ const Archive: React.FC = () => {
              <h3 className="text-sm font-bold text-text-muted uppercase mb-4 tracking-wider">
                  {t.archive.backupSection}
              </h3>
-             <div className="grid grid-cols-2 gap-4">
-                 <Button variant="outline" onClick={exportData} className="flex items-center justify-center">
+             <div className="space-y-4">
+                 <Button variant="outline" fullWidth onClick={exportData} className="flex items-center justify-center">
                      <Download size={18} className="mr-2" />
                      <span className="text-sm">{t.archive.btnExport}</span>
                  </Button>
                  
-                 <Button variant="outline" onClick={handleImportClick} className="flex items-center justify-center">
-                     <Upload size={18} className="mr-2" />
-                     <span className="text-sm">{t.archive.btnImport}</span>
-                 </Button>
-                 <input 
-                    type="file" 
-                    ref={fileInputRef} 
-                    onChange={handleFileChange} 
-                    accept=".json" 
-                    className="hidden" 
-                 />
+                 {/* Drag and Drop Zone */}
+                 <div 
+                    onDragOver={onDragOver}
+                    onDragLeave={onDragLeave}
+                    onDrop={onDrop}
+                    onClick={() => fileInputRef.current?.click()}
+                    className={`border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-colors ${
+                        isDragging 
+                        ? 'border-primary bg-primary/5' 
+                        : 'border-surface-highlight hover:border-primary/50'
+                    }`}
+                 >
+                     <input 
+                        type="file" 
+                        ref={fileInputRef} 
+                        onChange={handleFileChange} 
+                        accept=".json" 
+                        className="hidden" 
+                     />
+                     <div className="flex flex-col items-center space-y-2 text-text-muted">
+                        <Upload size={24} className={isDragging ? 'text-primary animate-bounce' : ''} />
+                        <span className="text-sm font-medium">{t.archive.dragDropLabel}</span>
+                        <span className="text-xs opacity-60">{t.archive.orClick}</span>
+                     </div>
+                 </div>
              </div>
         </div>
 

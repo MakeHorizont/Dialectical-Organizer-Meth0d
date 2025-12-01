@@ -108,6 +108,7 @@ export const zh: TranslationData = {
     risksTitle: "风险审计（第四阶段）",
     btnEdit: "修正",
     btnShare: "加密至中心",
+    btnPrint: "打印 / PDF",
     btnArchive: "归档",
     confirmArchive: "完成行动并归档？",
     shareSuccess: "数据已复制。"
@@ -122,6 +123,8 @@ export const zh: TranslationData = {
     backupSection: "数据管理",
     btnExport: "下载备份",
     btnImport: "导入备份",
+    dragDropLabel: "将备份文件拖放到此处",
+    orClick: "或点击选择文件",
     importSuccess: "数据恢复成功。",
     importError: "读取文件失败。"
   },

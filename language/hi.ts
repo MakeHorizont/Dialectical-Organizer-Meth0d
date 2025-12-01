@@ -108,6 +108,7 @@ export const hi: TranslationData = {
     risksTitle: "जोखिम ऑडिट (चरण 4)",
     btnEdit: "सुधार",
     btnShare: "केंद्र को एन्क्रिप्ट करें",
+    btnPrint: "प्रिंट / PDF",
     btnArchive: "अभिलेखागार में",
     confirmArchive: "अभियान पूरा करें और आर्काइव करें?",
     shareSuccess: "डेटा कॉपी किया गया।"
@@ -122,6 +123,8 @@ export const hi: TranslationData = {
     backupSection: "डेटा प्रबंधन",
     btnExport: "बैकअप डाउनलोड करें",
     btnImport: "बैकअप आयात करें",
+    dragDropLabel: "बैकअप फ़ाइल यहाँ छोड़ें",
+    orClick: "या फ़ाइल चुनने के लिए क्लिक करें",
     importSuccess: "डेटा सफलतापूर्वक बहाल किया गया।",
     importError: "फ़ाइल पढ़ने में विफल।"
   },

@@ -108,6 +108,7 @@ export const es: TranslationData = {
     risksTitle: "AUDITORÍA DE RIESGOS (FASE 4)",
     btnEdit: "Corrección",
     btnShare: "Cifrar al Centro",
+    btnPrint: "Imprimir / PDF",
     btnArchive: "Al Archivo",
     confirmArchive: "¿Completar operación y archivar?",
     shareSuccess: "Datos copiados."
@@ -122,6 +123,8 @@ export const es: TranslationData = {
     backupSection: "Gestión de Datos",
     btnExport: "Descargar Copia de Seguridad",
     btnImport: "Importar Respaldo",
+    dragDropLabel: "Arrastre el archivo de respaldo aquí",
+    orClick: "o haga clic para seleccionar archivo",
     importSuccess: "Datos restaurados con éxito.",
     importError: "Error al leer el archivo."
   },

@@ -108,6 +108,7 @@ export const en: TranslationData = {
     risksTitle: "RISKS",
     btnEdit: "Edit",
     btnShare: "Share",
+    btnPrint: "Print / PDF",
     btnArchive: "Archive",
     confirmArchive: "Complete this task?",
     shareSuccess: "Copied to clipboard."
@@ -122,6 +123,8 @@ export const en: TranslationData = {
     backupSection: "Data Management",
     btnExport: "Download Backup",
     btnImport: "Import Backup",
+    dragDropLabel: "Drag & Drop backup file here",
+    orClick: "or click to select file",
     importSuccess: "Data restored successfully.",
     importError: "Failed to read file."
   },

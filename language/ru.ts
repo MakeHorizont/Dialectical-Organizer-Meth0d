@@ -108,6 +108,7 @@ export const ru: TranslationData = {
     risksTitle: "РИСКИ",
     btnEdit: "Изменить",
     btnShare: "Поделиться",
+    btnPrint: "Печать / PDF",
     btnArchive: "В Архив",
     confirmArchive: "Завершить работу над задачей?",
     shareSuccess: "Скопировано в буфер."
@@ -120,15 +121,17 @@ export const ru: TranslationData = {
     confirmDelete: "Удалить навсегда?",
     labelArchive: "Готово",
     backupSection: "Управление Данными",
-    btnExport: "Скачать Резервную Копию",
+    btnExport: "Скачать Бэкап",
     btnImport: "Загрузить Бэкап",
+    dragDropLabel: "Перетащите файл бэкапа (.json) сюда",
+    orClick: "или нажмите для выбора файла",
     importSuccess: "Данные успешно восстановлены.",
     importError: "Ошибка чтения файла."
   },
   questions: {
     q_history: {
       categoryLabel: "История",
-      text: "Причина и Следствие: Как мы здесь оказались?",
+      text: "Причина и Следствие: Как мы сюда попали?",
       hint: "Найди материальные причины. Какие события или решения привели к текущей ситуации?",
       placeholder: "Исторически это сложилось из-за..."
     },

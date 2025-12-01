@@ -1,12 +1,12 @@
 
-import React, { useEffect, useState, useRef, useMemo } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Analysis, AnalysisStage, CategoryType } from '../types';
+import { Analysis, AnalysisStage } from '../types';
 import { getAnalysisById, createEmptyAnalysis, saveAnalysis } from '../services/storage';
 import { QUESTION_STRUCTURE } from '../constants';
 import { TopBar } from '../components/Navbar';
 import { Button } from '../components/Button';
-import { HelpCircle, ArrowRight, Check, Target, ShieldAlert, ChevronDown, ChevronUp, ChevronLeft, Save } from 'lucide-react';
+import { HelpCircle, ArrowRight, Check, Target, ShieldAlert, ChevronDown, ChevronUp, ChevronLeft, Save, Edit2 } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 
 const AnalysisWizard: React.FC = () => {
@@ -22,7 +22,7 @@ const AnalysisWizard: React.FC = () => {
   const [showHint, setShowHint] = useState(false);
   const [showContext, setShowContext] = useState(false);
   
-  // State for stable feedback text
+  // State for stable feedback text to prevent flickering on keystrokes
   const [feedbackText, setFeedbackText] = useState('');
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -68,14 +68,16 @@ const AnalysisWizard: React.FC = () => {
     return null;
   };
 
-  // Update feedback text only when the question changes
+  // Update feedback text only when the question changes or stage changes
   const currentQuestion = getCurrentQuestion();
+  const activeStageId = analysis?.stage === AnalysisStage.MODULES ? currentQuestion?.id : analysis?.stage;
+
   useEffect(() => {
-      if (analysis?.stage === AnalysisStage.MODULES && currentQuestion) {
+      if (t.feedback && t.feedback.length > 0) {
           const randomFeedback = t.feedback[Math.floor(Math.random() * t.feedback.length)];
           setFeedbackText(randomFeedback);
       }
-  }, [currentQuestion?.id, analysis?.stage, t.feedback]);
+  }, [activeStageId, t.feedback]);
 
   if (!analysis) return <div className="p-10 text-center text-text-muted">{t.wizard.loading}</div>;
 
@@ -86,6 +88,30 @@ const AnalysisWizard: React.FC = () => {
          saveAnalysis(updated);
          navigate('/');
      }
+  };
+
+  // Allows user to jump back to a specific answer in Phase 1 to edit it
+  const handleRewindToAnswer = (index: number) => {
+      if (!analysis) return;
+      
+      // We want to edit a previous answer. 
+      // In a strict wizard, this usually means unwinding the stack to that point.
+      if (window.confirm("Редактирование предыдущего шага. Вы вернетесь к этому вопросу, чтобы изменить ответ. Продолжить?")) {
+        const targetAnswer = analysis.answers[index];
+        const updated = { ...analysis };
+        
+        // Remove the target answer and all subsequent answers from the array
+        // so the Wizard "sees" this question as the next unanswered one.
+        updated.answers = analysis.answers.slice(0, index);
+        
+        // Set the input to the old value so user can edit it
+        setCurrentInput(targetAnswer.text);
+        updated.stage = AnalysisStage.MODULES;
+        
+        setAnalysis(updated);
+        saveAnalysis(updated);
+        setShowContext(false);
+      }
   };
 
   const handleBack = () => {
@@ -225,9 +251,19 @@ const AnalysisWizard: React.FC = () => {
                       </div>
                       
                       {analysis.answers.map((a, i) => (
-                          <div key={i} className="border-t border-surface-highlight pt-2">
-                               <div className="text-[10px] text-primary font-bold">{t.questions[a.questionId]?.categoryLabel}</div>
-                               <div className="text-sm text-text-main">{a.text}</div>
+                          <div key={i} className="border-t border-surface-highlight pt-2 group relative pr-8">
+                               <div>
+                                   <div className="text-[10px] text-primary font-bold">{t.questions[a.questionId]?.categoryLabel}</div>
+                                   <div className="text-sm text-text-main">{a.text}</div>
+                               </div>
+                               {/* Rewind/Edit Button */}
+                               <button 
+                                   onClick={() => handleRewindToAnswer(i)}
+                                   className="absolute right-0 top-2 p-2 text-text-muted hover:text-primary transition-colors"
+                                   title="Редактировать этот шаг"
+                               >
+                                   <Edit2 size={16} />
+                               </button>
                           </div>
                       ))}
                       
@@ -280,37 +316,35 @@ const AnalysisWizard: React.FC = () => {
 
             <div className="bg-primary/5 border-l-4 border-primary p-3 mb-2">
                 <span className="text-xs font-bold text-primary uppercase">{qData.categoryLabel}</span>
+                <h3 className="text-lg font-bold text-text-main mt-1">{qData.text}</h3>
             </div>
-
-            <h2 className="text-xl font-bold text-text-main leading-relaxed">
-                {qData.text}
-            </h2>
             
             <div className="relative">
-                <button 
-                  onClick={() => setShowHint(!showHint)}
-                  className="absolute right-2 top-2 text-primary/50 hover:text-primary transition-colors"
-                >
-                    <HelpCircle size={24} />
-                </button>
                 <textarea
                     ref={textareaRef}
-                    className="w-full p-4 rounded-xl border border-surface-highlight focus:border-primary focus:ring-1 focus:ring-primary bg-surface text-text-main h-48 text-base resize-none shadow-inner"
+                    className="w-full p-4 rounded-xl border-2 border-primary/20 focus:border-primary focus:ring-0 bg-surface text-text-main h-48 text-lg resize-none"
                     placeholder={qData.placeholder}
                     value={currentInput}
                     onChange={(e) => setCurrentInput(e.target.value)}
                 />
+                 {/* Feedback Animation (Stable now) */}
+                 {currentInput.length > 20 && feedbackText && (
+                    <div className="absolute bottom-4 right-4 text-xs font-mono text-primary animate-fade-in bg-surface/80 px-2 py-1 rounded">
+                        {feedbackText}
+                    </div>
+                )}
             </div>
 
+            <button 
+                onClick={() => setShowHint(!showHint)}
+                className="text-xs text-text-muted hover:text-primary flex items-center"
+            >
+                <HelpCircle size={14} className="mr-1" /> {t.wizard.hintLabel}
+            </button>
+            
             {showHint && (
-                <div className="bg-secondary/10 p-4 rounded-lg border border-secondary/20 text-text-main text-sm animate-fade-in">
-                    <strong className="text-secondary">{t.wizard.hintLabel}</strong> {qData.hint}
-                </div>
-            )}
-
-            {analysis.answers.length > 0 && (
-                <div className="text-xs text-text-muted mt-4 text-center italic transition-opacity duration-300">
-                    "{feedbackText}"
+                <div className="bg-surface-highlight p-3 rounded-lg text-sm text-text-muted italic animate-fade-in border border-primary/10">
+                    {qData.hint}
                 </div>
             )}
         </div>
@@ -318,123 +352,138 @@ const AnalysisWizard: React.FC = () => {
   };
 
   const renderSynthesis = () => (
-    <div className="animate-slide-up space-y-6">
-        <div className="bg-surface-highlight p-4 rounded-lg text-xs text-text-muted mb-4">
-            {t.stages.synthesis}
-        </div>
-        <h2 className="text-xl font-bold text-text-main">{t.wizard.synthesisTitle}</h2>
-        <p className="text-sm text-text-muted">{t.wizard.synthesisDesc}</p>
-        <textarea
-            ref={textareaRef}
-            className="w-full p-4 rounded-xl border-2 border-primary/30 focus:border-primary focus:ring-0 bg-surface text-text-main h-40 text-base resize-none"
-            placeholder={t.wizard.synthesisPlaceholder}
-            value={currentInput}
-            onChange={(e) => setCurrentInput(e.target.value)}
-        />
-    </div>
+      <div className="animate-slide-up space-y-6">
+           <div className="bg-secondary text-text-inverted p-6 rounded-xl shadow-lg">
+               <Target size={32} className="mb-2 opacity-80" />
+               <h2 className="text-xl font-bold mb-2">{t.wizard.synthesisTitle}</h2>
+               <p className="text-sm opacity-90">{t.wizard.synthesisDesc}</p>
+           </div>
+           
+           <textarea
+             ref={textareaRef}
+             className="w-full p-4 rounded-xl border-2 border-secondary focus:border-secondary focus:ring-0 bg-surface text-text-main h-40 text-lg resize-none shadow-inner"
+             placeholder={t.wizard.synthesisPlaceholder}
+             value={currentInput}
+             onChange={(e) => setCurrentInput(e.target.value)}
+           />
+      </div>
   );
 
   const renderStrategy = () => (
-    <div className="animate-slide-up space-y-6">
-        <div className="bg-surface-highlight p-4 rounded-lg text-xs text-text-muted mb-4 flex items-center">
-            <Target className="mr-2 w-4 h-4"/> {t.stages.strategy}
-        </div>
-        
-        <h2 className="text-xl font-bold text-text-main">{t.wizard.strategyTitle}</h2>
-        <p className="text-sm text-text-muted">{t.wizard.strategyDesc}</p>
-
-        <div className="space-y-4">
-            <div>
-                <label className="block text-xs font-bold text-danger uppercase mb-1">{t.wizard.vulnLabel}</label>
-                <textarea
-                    ref={textareaRef}
-                    className="w-full p-3 rounded-lg border border-surface-highlight focus:border-danger bg-surface text-text-main h-24 text-sm resize-none"
-                    placeholder={t.wizard.vulnPlaceholder}
-                    value={currentInput}
-                    onChange={(e) => setCurrentInput(e.target.value)}
-                />
-            </div>
-            <div>
-                <label className="block text-xs font-bold text-success uppercase mb-1">{t.wizard.oppLabel}</label>
-                <textarea
-                    className="w-full p-3 rounded-lg border border-surface-highlight focus:border-success bg-surface text-text-main h-24 text-sm resize-none"
-                    placeholder={t.wizard.oppPlaceholder}
-                    value={secondaryInput}
-                    onChange={(e) => setSecondaryInput(e.target.value)}
-                />
-            </div>
-        </div>
-    </div>
+      <div className="animate-slide-up space-y-6">
+           <div className="mb-4">
+               <h2 className="text-xl font-bold text-text-main mb-1">{t.wizard.strategyTitle}</h2>
+               <p className="text-text-muted text-sm">{t.wizard.strategyDesc}</p>
+           </div>
+           
+           <div className="space-y-4">
+               <div>
+                   <label className="text-xs font-bold text-danger uppercase mb-1 block">{t.wizard.vulnLabel}</label>
+                   <textarea
+                     ref={textareaRef}
+                     className="w-full p-3 rounded-lg border-2 border-danger/20 focus:border-danger bg-surface text-text-main h-32 resize-none"
+                     placeholder={t.wizard.vulnPlaceholder}
+                     value={currentInput}
+                     onChange={(e) => setCurrentInput(e.target.value)}
+                   />
+               </div>
+               
+               <div>
+                   <label className="text-xs font-bold text-success uppercase mb-1 block">{t.wizard.oppLabel}</label>
+                   <textarea
+                     className="w-full p-3 rounded-lg border-2 border-success/20 focus:border-success bg-surface text-text-main h-32 resize-none"
+                     placeholder={t.wizard.oppPlaceholder}
+                     value={secondaryInput}
+                     onChange={(e) => setSecondaryInput(e.target.value)}
+                   />
+               </div>
+           </div>
+      </div>
   );
 
   const renderRisks = () => (
-    <div className="animate-slide-up space-y-6">
-        <div className="bg-surface-highlight p-4 rounded-lg text-xs text-text-muted mb-4 flex items-center">
-            <ShieldAlert className="mr-2 w-4 h-4"/> {t.stages.risks}
-        </div>
-        <h2 className="text-xl font-bold text-text-main">{t.wizard.risksTitle}</h2>
-        <p className="text-sm text-text-muted">{t.wizard.risksDesc}</p>
-        
-        <label className="block text-xs font-bold text-text-muted uppercase mb-1">{t.wizard.risksLabel}</label>
-        <textarea
-            ref={textareaRef}
-            className="w-full p-4 rounded-xl border-2 border-surface-highlight focus:border-primary focus:ring-0 bg-surface text-text-main h-40 text-base resize-none"
-            placeholder={t.wizard.risksPlaceholder}
-            value={currentInput}
-            onChange={(e) => setCurrentInput(e.target.value)}
-        />
-    </div>
+      <div className="animate-slide-up space-y-6">
+           <div className="bg-surface-highlight p-4 rounded-xl border-l-4 border-warning">
+               <h2 className="text-lg font-bold text-text-main flex items-center">
+                   <ShieldAlert size={20} className="mr-2 text-warning"/> {t.wizard.risksTitle}
+               </h2>
+               <p className="text-text-muted text-sm mt-1">{t.wizard.risksDesc}</p>
+           </div>
+           
+           <textarea
+             ref={textareaRef}
+             className="w-full p-4 rounded-xl border-2 border-warning/30 focus:border-warning bg-surface text-text-main h-48 text-lg resize-none"
+             placeholder={t.wizard.risksPlaceholder}
+             value={currentInput}
+             onChange={(e) => setCurrentInput(e.target.value)}
+           />
+      </div>
   );
 
-  const getButtonText = () => {
-      if (analysis.stage === AnalysisStage.RISKS) return t.wizard.btnFinish;
-      return t.wizard.btnNext;
-  };
-
-  const isButtonDisabled = () => {
-      if (analysis.stage === AnalysisStage.STRATEGY) return !currentInput.trim() || !secondaryInput.trim();
-      return !currentInput.trim();
+  // Router for rendering steps
+  const renderStep = () => {
+      switch(analysis.stage) {
+          case AnalysisStage.INIT: return renderInit();
+          case AnalysisStage.MODULES: return renderModules();
+          case AnalysisStage.SYNTHESIS: return renderSynthesis();
+          case AnalysisStage.STRATEGY: return renderStrategy();
+          case AnalysisStage.RISKS: return renderRisks();
+          default: return null;
+      }
   };
 
   return (
     <>
-      <TopBar title={analysis.title || t.wizard.titleNew} showBack />
-      <div className="max-w-2xl mx-auto p-4 pb-24">
-         
-         <ContextPanel />
+      <TopBar 
+        title={t.wizard.titleNew} 
+        showBack={false} 
+        showSettings={false} 
+      />
+      
+      <div className="max-w-xl mx-auto p-4 pb-32">
+          {/* Top Controls */}
+          <div className="flex justify-between items-center mb-4">
+              <Button variant="ghost" onClick={handleSaveAndExit} className="text-xs">
+                  <Save size={16} className="mr-1"/> {t.wizard.btnSave}
+              </Button>
+          </div>
 
-         {analysis.stage === AnalysisStage.INIT && renderInit()}
-         {analysis.stage === AnalysisStage.MODULES && renderModules()}
-         {analysis.stage === AnalysisStage.SYNTHESIS && renderSynthesis()}
-         {analysis.stage === AnalysisStage.STRATEGY && renderStrategy()}
-         {analysis.stage === AnalysisStage.RISKS && renderRisks()}
+          <ContextPanel />
 
-         <div className="fixed bottom-20 left-0 right-0 px-4 max-w-2xl mx-auto flex gap-3">
-            {/* Back Button - Only show if not in very first state */}
-            {!(analysis.stage === AnalysisStage.INIT && !analysis.title) && (
-                <Button variant="secondary" onClick={handleBack} className="px-5 py-4 flex-shrink-0">
-                    <ChevronLeft size={28} />
-                </Button>
-            )}
+          {/* Main Content */}
+          <div className="min-h-[300px]">
+            {renderStep()}
+          </div>
+      </div>
 
-            {/* Save & Exit Button */}
-            <Button variant="outline" onClick={handleSaveAndExit} className="px-5 py-4 flex-shrink-0">
-                <Save size={24} />
-            </Button>
+      {/* Bottom Navigation */}
+      <div className="fixed bottom-0 left-0 right-0 bg-surface border-t border-surface-highlight p-4 z-50 shadow-[0_-5px_10px_rgba(0,0,0,0.05)]">
+          <div className="max-w-xl mx-auto flex justify-between items-center gap-4">
+              <Button 
+                variant="secondary" 
+                onClick={handleBack}
+                disabled={analysis.stage === AnalysisStage.INIT && !analysis.title}
+                className="h-20 min-w-[5rem] flex-shrink-0 rounded-2xl" 
+              >
+                  <ChevronLeft size={48} />
+              </Button>
 
-            <Button 
+              <div className="flex-grow">
+                 {/* Spacer or indicator could go here */}
+              </div>
+
+              <Button 
                 variant="primary" 
-                fullWidth 
                 onClick={handleNext}
-                disabled={isButtonDisabled()}
-                className="shadow-xl flex-grow py-4"
-            >
-                <span className="flex items-center text-lg">
-                    {getButtonText()} 
-                    {analysis.stage === AnalysisStage.RISKS ? <Check className="ml-2" size={24} /> : <ArrowRight className="ml-2" size={24} />}
-                </span>
-            </Button>
-         </div>
+                disabled={
+                    (analysis.stage === AnalysisStage.STRATEGY && (!currentInput || !secondaryInput)) ||
+                    (!currentInput && analysis.stage !== AnalysisStage.STRATEGY)
+                }
+                className="h-20 min-w-[7rem] flex-shrink-0 shadow-xl shadow-primary/20 rounded-2xl"
+              >
+                  {analysis.stage === AnalysisStage.RISKS ? <Check size={48} /> : <ArrowRight size={48} />}
+              </Button>
+          </div>
       </div>
     </>
   );

@@ -146,6 +146,7 @@ export interface TranslationData {
     risksTitle: string;
     btnEdit: string;
     btnShare: string;
+    btnPrint: string; // New
     btnArchive: string;
     confirmArchive: string;
     shareSuccess: string;
@@ -157,11 +158,13 @@ export interface TranslationData {
     btnBurn: string;
     confirmDelete: string;
     labelArchive: string;
-    backupSection: string; // New
-    btnExport: string;     // New
-    btnImport: string;     // New
-    importSuccess: string; // New
-    importError: string;   // New
+    backupSection: string;
+    btnExport: string;
+    btnImport: string;
+    dragDropLabel: string; // New
+    orClick: string;       // New
+    importSuccess: string;
+    importError: string;
   };
   questions: Record<string, {
     categoryLabel: string;
