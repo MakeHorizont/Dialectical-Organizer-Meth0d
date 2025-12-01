@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+
+import React, { useEffect, useState, useMemo } from 'react';
 import { getAnalyses } from '../services/storage';
 import { Analysis, AnalysisStage, Quote } from '../types';
 import { Card } from '../components/Card';
 import { TopBar } from '../components/Navbar';
 import { useNavigate } from 'react-router-dom';
-import { Edit3, Eye } from 'lucide-react';
+import { Edit3, Eye, Search, Filter } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 
 const Dashboard: React.FC = () => {
@@ -13,8 +14,13 @@ const Dashboard: React.FC = () => {
   const [quote, setQuote] = useState<Quote>({ text: "", author: "" });
   const navigate = useNavigate();
 
+  // Filter & Search States
+  const [searchQuery, setSearchQuery] = useState('');
+  const [statusFilter, setStatusFilter] = useState<'ALL' | 'ACTIVE' | 'DONE'>('ACTIVE');
+
   useEffect(() => {
     const all = getAnalyses();
+    // Initially load non-archived items. The Archive screen handles archived ones.
     setAnalyses(all.filter(a => !a.isArchived).sort((a, b) => b.updatedAt - a.updatedAt));
   }, []);
 
@@ -28,6 +34,25 @@ const Dashboard: React.FC = () => {
     const randomQuote = availableQuotes[Math.floor(Math.random() * availableQuotes.length)];
     setQuote(randomQuote);
   }, [t]);
+
+  const filteredAnalyses = useMemo(() => {
+      return analyses.filter(analysis => {
+          // Search Logic (Case insensitive)
+          const matchesSearch = 
+             (analysis.title || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+             (analysis.thesis || '').toLowerCase().includes(searchQuery.toLowerCase());
+
+          // Status Logic
+          let matchesStatus = true;
+          if (statusFilter === 'ACTIVE') {
+              matchesStatus = analysis.stage !== AnalysisStage.COMPLETED;
+          } else if (statusFilter === 'DONE') {
+              matchesStatus = analysis.stage === AnalysisStage.COMPLETED;
+          }
+
+          return matchesSearch && matchesStatus;
+      });
+  }, [analyses, searchQuery, statusFilter]);
 
   const getStageLabel = (stage: AnalysisStage) => {
     switch (stage) {
@@ -44,7 +69,7 @@ const Dashboard: React.FC = () => {
   return (
     <>
       <TopBar title={t.dashboard.title} showSettings />
-      <div className="p-4 max-w-2xl mx-auto space-y-6 animate-fade-in">
+      <div className="p-4 max-w-2xl mx-auto space-y-6 animate-fade-in pb-24">
         
         {/* Slogan Header */}
         <div className="text-center opacity-60">
@@ -59,19 +84,57 @@ const Dashboard: React.FC = () => {
           <p className="text-xs font-bold text-right">— {quote.author}</p>
         </div>
 
-        <h2 className="text-xl font-bold text-text-main flex items-center">
+        {/* Controls: Tabs & Search */}
+        <div className="space-y-4">
+             {/* Search Bar */}
+             <div className="relative">
+                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-text-muted opacity-50" size={18} />
+                 <input 
+                    type="text" 
+                    placeholder={t.dashboard.searchPlaceholder}
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full pl-10 pr-4 py-3 bg-surface border border-surface-highlight rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all text-sm"
+                 />
+             </div>
+
+             {/* Status Tabs */}
+             <div className="flex bg-surface rounded-xl p-1 border border-surface-highlight">
+                 {(['ALL', 'ACTIVE', 'DONE'] as const).map((filter) => (
+                     <button
+                        key={filter}
+                        onClick={() => setStatusFilter(filter)}
+                        className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${
+                            statusFilter === filter 
+                            ? 'bg-primary text-text-inverted shadow-md' 
+                            : 'text-text-muted hover:bg-surface-highlight'
+                        }`}
+                     >
+                         {filter === 'ALL' && t.dashboard.filterAll}
+                         {filter === 'ACTIVE' && t.dashboard.filterActive}
+                         {filter === 'DONE' && t.dashboard.filterDone}
+                     </button>
+                 ))}
+             </div>
+        </div>
+
+        <h2 className="text-xl font-bold text-text-main flex items-center mt-6">
           <span className="bg-primary w-2 h-6 mr-2 rounded-sm"></span>
-          {t.dashboard.activeTasks}
+          {/* Dynamic title based on filter */}
+          {statusFilter === 'ALL' && t.dashboard.filterAll}
+          {statusFilter === 'ACTIVE' && t.dashboard.filterActive}
+          {statusFilter === 'DONE' && t.dashboard.filterDone}
+          <span className="ml-2 text-sm text-text-muted font-normal">({filteredAnalyses.length})</span>
         </h2>
 
-        {analyses.length === 0 ? (
+        {filteredAnalyses.length === 0 ? (
           <div className="text-center py-12 bg-surface rounded-xl border-2 border-dashed border-primary/20">
             <p className="text-lg text-text-muted mb-2">{t.dashboard.emptyTitle}</p>
             <p className="text-sm text-text-muted/70">{t.dashboard.emptyDesc}</p>
           </div>
         ) : (
           <div className="space-y-4">
-            {analyses.map(analysis => (
+            {filteredAnalyses.map(analysis => (
               <Card key={analysis.id} className="relative group active:scale-[0.98] transition-transform" onClick={() => {
                   if (analysis.stage === AnalysisStage.COMPLETED) {
                       navigate(`/analysis/${analysis.id}`);

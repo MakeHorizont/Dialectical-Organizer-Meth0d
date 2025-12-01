@@ -1,14 +1,22 @@
 
+export type LanguageCode = 'ru' | 'en' | 'es' | 'zh' | 'hi';
+
+export type ThemeId = 'neutral' | 'socialist' | 'cozy' | 'brutal' | 'amoled' | 'premium' | 'kitty' | 'pirate';
+
+export enum AnalysisStage {
+  INIT = 'INIT',
+  MODULES = 'MODULES',
+  SYNTHESIS = 'SYNTHESIS',
+  STRATEGY = 'STRATEGY',
+  RISKS = 'RISKS',
+  COMPLETED = 'COMPLETED'
+}
+
 export enum CategoryType {
   HISTORICAL = 'HISTORICAL', // Module 1
   CLASS = 'CLASS',           // Module 2
   SYSTEMIC = 'SYSTEMIC',     // Module 3
   IDEOLOGICAL = 'IDEOLOGICAL' // Module 4
-}
-
-export interface QuestionStructure {
-  id: string;
-  type: CategoryType;
 }
 
 export interface Answer {
@@ -17,28 +25,15 @@ export interface Answer {
   timestamp: number;
 }
 
-// The progression stages of the Protocol
-export enum AnalysisStage {
-  INIT = 'INIT',           // Object of Analysis
-  MODULES = 'MODULES',     // Phase 1: Multivector Analysis
-  SYNTHESIS = 'SYNTHESIS', // Phase 2: Central Contradiction
-  STRATEGY = 'STRATEGY',   // Phase 3: Strategic Briefing inputs
-  RISKS = 'RISKS',         // Phase 4: Self-Criticism
-  COMPLETED = 'COMPLETED', // Done
-}
-
 export interface Analysis {
   id: string;
   title: string;
-  thesis: string; // Object of Analysis
-  synthesis: string; // Central Contradiction
-  
-  // New Strategic Fields
+  thesis: string;
+  synthesis: string;
   vulnerabilities?: string;
   opportunities?: string;
   risks?: string;
   blindSpots?: string;
-
   createdAt: number;
   updatedAt: number;
   stage: AnalysisStage;
@@ -51,17 +46,40 @@ export interface Quote {
   author: string;
 }
 
-export type LanguageCode = 'ru' | 'en' | 'es' | 'zh' | 'hi';
+export interface Template {
+  id: string;
+  label: string;
+  title: string;
+  thesis: string;
+}
 
-// Helper type to make all properties optional for overrides
+export interface QuestionStructure {
+  id: string;
+  type: CategoryType;
+}
+
 export type DeepPartial<T> = {
-    [P in keyof T]?: T[P] extends object ? DeepPartial<T[P]> : T[P];
+  [P in keyof T]?: T[P] extends object ? DeepPartial<T[P]> : T[P];
 };
 
-export interface TutorialSlide {
-  title: string;
-  content: string;
-  analogy?: string; // e.g. "The Foundation", "The Walls"
+export interface Theme {
+  id: ThemeId;
+  colors: {
+    primary: string;
+    secondary: string;
+    background: string;
+    surface: string;
+    surfaceHighlight: string;
+    textMain: string;
+    textMuted: string;
+    textInverted: string;
+    success: string;
+    warning: string;
+    danger: string;
+  };
+  textOverrides: {
+    [key in LanguageCode]?: DeepPartial<TranslationData>;
+  };
 }
 
 export interface TranslationData {
@@ -72,7 +90,7 @@ export interface TranslationData {
     analysis: string;
     archive: string;
   };
-  themeNames: Record<ThemeId, string>; // Localized theme names
+  themeNames: Record<string, string>;
   tutorial: {
     welcome: string;
     startBtn: string;
@@ -80,17 +98,18 @@ export interface TranslationData {
     nextBtn: string;
     finishBtn: string;
     slides: {
-      intro: TutorialSlide;
-      foundation: TutorialSlide;
-      walls: TutorialSlide;
-      roof: TutorialSlide;
-      method: TutorialSlide;
-    }
+      intro: { title: string; content: string; analogy?: string };
+      foundation: { title: string; content: string; analogy?: string };
+      walls: { title: string; content: string; analogy?: string };
+      roof: { title: string; content: string; analogy?: string };
+      method: { title: string; content: string; analogy?: string };
+    };
   };
   stages: {
     init: string;
     modules: string;
     synthesis: string;
+    synthesisDesc?: string;
     strategy: string;
     risks: string;
     completed: string;
@@ -101,6 +120,10 @@ export interface TranslationData {
     emptyDesc: string;
     activeTasks: string;
     untitled: string;
+    searchPlaceholder: string;
+    filterAll: string;
+    filterActive: string;
+    filterDone: string;
   };
   wizard: {
     titleNew: string;
@@ -115,20 +138,17 @@ export interface TranslationData {
     btnFinish: string;
     contextLabel: string;
     
-    // Synthesis
     synthesisTitle: string;
     synthesisDesc: string;
     synthesisPlaceholder: string;
     
-    // Strategy
     strategyTitle: string;
     strategyDesc: string;
     vulnLabel: string;
     vulnPlaceholder: string;
     oppLabel: string;
     oppPlaceholder: string;
-
-    // Risks
+    
     risksTitle: string;
     risksDesc: string;
     risksLabel: string;
@@ -146,7 +166,8 @@ export interface TranslationData {
     risksTitle: string;
     btnEdit: string;
     btnShare: string;
-    btnPrint: string; // New
+    btnPrint: string;
+    btnExportMD: string;
     btnArchive: string;
     confirmArchive: string;
     shareSuccess: string;
@@ -161,8 +182,8 @@ export interface TranslationData {
     backupSection: string;
     btnExport: string;
     btnImport: string;
-    dragDropLabel: string; // New
-    orClick: string;       // New
+    dragDropLabel: string;
+    orClick: string;
     importSuccess: string;
     importError: string;
   };
@@ -172,31 +193,7 @@ export interface TranslationData {
     hint: string;
     placeholder: string;
   }>;
-  quotes: Quote[]; 
-  feedback: string[];
-}
-
-// Theme Types
-export type ThemeId = 'neutral' | 'socialist' | 'cozy' | 'brutal' | 'amoled' | 'premium' | 'kitty' | 'pirate';
-
-export interface ThemeColors {
-  primary: string;   // Main accent (Buttons, Links)
-  secondary: string; // Secondary accent
-  background: string; // Main page background
-  surface: string;   // Cards, inputs
-  surfaceHighlight: string; // Hover states
-  textMain: string;
-  textMuted: string;
-  textInverted: string;
-  success: string;
-  warning: string;
-  danger: string;
-}
-
-export interface Theme {
-  id: ThemeId;
-  colors: ThemeColors;
-  textOverrides: {
-      [key in LanguageCode]?: DeepPartial<TranslationData>;
-  };
+  quotes?: Quote[];
+  feedback?: string[];
+  templates?: Template[];
 }

@@ -65,7 +65,11 @@ export const en: TranslationData = {
     emptyTitle: "Operational Pause",
     emptyDesc: "Situation stable. Activate protocol if a new problem arises.",
     activeTasks: "In Progress",
-    untitled: "Object #"
+    untitled: "Object #",
+    searchPlaceholder: "Search by thesis...",
+    filterAll: "All",
+    filterActive: "Active",
+    filterDone: "Done"
   },
   wizard: {
     titleNew: "Analysis Setup",
@@ -109,6 +113,7 @@ export const en: TranslationData = {
     btnEdit: "Edit",
     btnShare: "Share",
     btnPrint: "Print / PDF",
+    btnExportMD: "Download .MD",
     btnArchive: "Archive",
     confirmArchive: "Complete this task?",
     shareSuccess: "Copied to clipboard."
@@ -154,11 +159,44 @@ export const en: TranslationData = {
       placeholder: "Officially it is said that..., but in reality..."
     }
   },
-  quotes: [],
+  quotes: [
+    { text: "Philosophers have only interpreted the world in various ways; the point is to change it.", author: "Karl Marx" },
+    { text: "The history of all hitherto existing society is the history of class struggles.", author: "Karl Marx" },
+    { text: "History repeats itself, first as tragedy, second as farce.", author: "Karl Marx" },
+    { text: "There are no morals in politics; there is only expedience.", author: "V.I. Lenin" },
+    { text: "A lie told often enough becomes the truth.", author: "V.I. Lenin" },
+    { text: "Quantity has a quality all its own.", author: "J.V. Stalin" },
+    { text: "Political power grows out of the barrel of a gun.", author: "Mao Zedong" },
+    { text: "Freedom is the recognition of necessity.", author: "Friedrich Engels" },
+    { text: "No man ever steps in the same river twice.", author: "Heraclitus" },
+    { text: "Better to die standing than to live on your knees.", author: "Che Guevara" },
+    { text: "Condemn me. It does not matter. History will absolve me.", author: "Fidel Castro" },
+    { text: "Pessimism of the intellect, optimism of the will.", author: "Antonio Gramsci" }
+  ],
   feedback: [
     "Essence captured.",
     "Facts confirmed.",
     "Illusions discarded.",
     "Connections found."
+  ],
+  templates: [
+    {
+      id: "conflict",
+      label: "Conflict",
+      title: "Conflict of Interest in [Team/Project]",
+      thesis: "A clash between Group A and Group B is observed. Resources are limited. Compromise is impossible."
+    },
+    {
+      id: "stagnation",
+      label: "Stagnation",
+      title: "Stagnation of [Project]",
+      thesis: "Growth has stopped. Old methods no longer yield results, but new ones have not yet been implemented."
+    },
+    {
+      id: "personal",
+      label: "Personal",
+      title: "Personal Dead End in [Area]",
+      thesis: "Subjective feeling of an impasse. Desires do not align with capabilities or resources."
+    }
   ]
 };

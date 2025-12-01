@@ -65,7 +65,11 @@ export const zh: TranslationData = {
     emptyTitle: "行动暂停",
     emptyDesc: "敌人从不睡觉。针对新情况激活分析协议。",
     activeTasks: "当前行动",
-    untitled: "对象 #"
+    untitled: "对象 #",
+    searchPlaceholder: "按论点搜索...",
+    filterAll: "全部",
+    filterActive: "进行中",
+    filterDone: "已完成"
   },
   wizard: {
     titleNew: "协议初始化",
@@ -109,6 +113,7 @@ export const zh: TranslationData = {
     btnEdit: "修正",
     btnShare: "加密至中心",
     btnPrint: "打印 / PDF",
+    btnExportMD: "下载 .MD",
     btnArchive: "归档",
     confirmArchive: "完成行动并归档？",
     shareSuccess: "数据已复制。"
@@ -154,12 +159,43 @@ export const zh: TranslationData = {
       placeholder: "我们被告知...，但实际上..."
     }
   },
-  quotes: [],
+  quotes: [
+    { text: "哲学家们只是用不同的方式解释世界，而问题在于改变世界。", author: "卡尔·马克思" },
+    { text: "至今一切社会的历史都是阶级斗争的历史。", author: "卡尔·马克思" },
+    { text: "枪杆子里面出政权。", author: "毛泽东" },
+    { text: "一切反动派都是纸老虎。", author: "毛泽东" },
+    { text: "革命不是请客吃饭。", author: "毛泽东" },
+    { text: "没有调查，就没有发言权。", author: "毛泽东" },
+    { text: "星星之火，可以燎原。", author: "毛泽东" },
+    { text: "战略上藐视敌人，战术上重视敌人。", author: "毛泽东" },
+    { text: "量变引起质变。", author: "弗里德里希·恩格斯" },
+    { text: "不是意识决定生活，而是生活决定意识。", author: "卡尔·马克思" }
+  ],
   feedback: [
     "本质已揭示。继续。",
     "唯物主义基础已确认。",
     "幻想已抛弃。正在记录。",
     "对唯心主义的有力打击。",
     "联系已建立。"
+  ],
+  templates: [
+    {
+      id: "conflict",
+      label: "冲突",
+      title: "[团队/项目]中的利益冲突",
+      thesis: "观察到A组和B组之间的冲突。资源有限。妥协是不可能的。"
+    },
+    {
+      id: "stagnation",
+      label: "停滞",
+      title: "[项目]的发展停滞",
+      thesis: "增长已经停止。旧方法不再产生结果，但新方法尚未实施。"
+    },
+    {
+      id: "personal",
+      label: "个人",
+      title: "[领域]中的个人僵局",
+      thesis: "主观上的僵局感。愿望与能力或资源不匹配。"
+    }
   ]
 };

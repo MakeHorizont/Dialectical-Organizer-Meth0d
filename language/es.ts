@@ -65,7 +65,11 @@ export const es: TranslationData = {
     emptyTitle: "Pausa Operativa",
     emptyDesc: "El enemigo nunca duerme. Activa el protocolo de análisis para la nueva situación.",
     activeTasks: "Operaciones Actuales",
-    untitled: "Objeto #"
+    untitled: "Objeto #" ,
+    searchPlaceholder: "Buscar por tesis...",
+    filterAll: "Todos",
+    filterActive: "Activos",
+    filterDone: "Listos"
   },
   wizard: {
     titleNew: "Inicialización del Protocolo",
@@ -109,6 +113,7 @@ export const es: TranslationData = {
     btnEdit: "Corrección",
     btnShare: "Cifrar al Centro",
     btnPrint: "Imprimir / PDF",
+    btnExportMD: "Descargar .MD",
     btnArchive: "Al Archivo",
     confirmArchive: "¿Completar operación y archivar?",
     shareSuccess: "Datos copiados."
@@ -154,12 +159,43 @@ export const es: TranslationData = {
       placeholder: "Se nos dice que..., pero en realidad..."
     }
   },
-  quotes: [],
+  quotes: [
+    { text: "Los filósofos no han hecho más que interpretar de diversos modos el mundo, pero de lo que se trata es de transformarlo.", author: "Karl Marx" },
+    { text: "La historia de todas las sociedades hasta nuestros días es la historia de la lucha de clases.", author: "Karl Marx" },
+    { text: "La libertad no es más que el reconocimiento de la necesidad.", author: "Friedrich Engels" },
+    { text: "Hasta la victoria siempre.", author: "Che Guevara" },
+    { text: "Prefiero morir de pie que vivir de rodillas.", author: "Che Guevara" },
+    { text: "Condenadme, no importa, la historia me absolverá.", author: "Fidel Castro" },
+    { text: "Revolución es sentido del momento histórico.", author: "Fidel Castro" },
+    { text: "Odio a los indiferentes. Creo que vivir quiere decir tomar partido.", author: "Antonio Gramsci" },
+    { text: "El poder político nace del cañón de un arma.", author: "Mao Zedong" },
+    { text: "Pueblo que no sabe su historia es pueblo condenado a repetirla.", author: "Dicho Popular" }
+  ],
   feedback: [
     "Esencia revelada. Procediendo.",
     "Base materialista confirmada.",
     "Ilusiones descartadas. Grabando.",
     "Buen golpe contra el idealismo.",
     "Conexiones establecidas."
+  ],
+  templates: [
+    {
+      id: "conflict",
+      label: "Conflicto",
+      title: "Conflicto de Intereses en [Equipo/Proyecto]",
+      thesis: "Se observa un choque entre el Grupo A y el Grupo B. Los recursos son limitados. El compromiso es imposible."
+    },
+    {
+      id: "stagnation",
+      label: "Estancamiento",
+      title: "Estancamiento del [Proyecto]",
+      thesis: "El crecimiento se ha detenido. Los viejos métodos ya no dan resultados, pero los nuevos aún no se han implementado."
+    },
+    {
+      id: "personal",
+      label: "Personal",
+      title: "Callejón sin salida en [Área]",
+      thesis: "Sensación subjetiva de estancamiento. Los deseos no coinciden con las capacidades o recursos."
+    }
   ]
 };
