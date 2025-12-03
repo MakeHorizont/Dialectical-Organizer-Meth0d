@@ -83,6 +83,9 @@ export const zh: TranslationData = {
     btnSave: "保存并退出",
     btnFinish: "生成简报",
     contextLabel: "行动背景",
+
+    tagsLabel: "标签",
+    tagsPlaceholder: "以逗号分隔的类别（例如：工作，紧急）",
     
     synthesisTitle: "第二阶段：主要矛盾",
     synthesisDesc: "分析第一阶段的答案。找出推动这一过程的一个主要矛盾（X与Y的斗争）。",
@@ -102,6 +105,8 @@ export const zh: TranslationData = {
     
     hintLabel: "方法论者笔记：",
     loading: "正在启动分析模块...",
+
+    templatesTitle: "标准方案"
   },
   view: {
     objectLabel: "分析对象",
@@ -114,6 +119,7 @@ export const zh: TranslationData = {
     btnShare: "加密至中心",
     btnPrint: "打印 / PDF",
     btnExportMD: "下载 .MD",
+    btnExportJSON: "下载 .JSON",
     btnArchive: "归档",
     confirmArchive: "完成行动并归档？",
     shareSuccess: "数据已复制。"

@@ -1,12 +1,12 @@
 
 import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Analysis, AnalysisStage } from '../types';
+import { Analysis, AnalysisStage, Template } from '../types';
 import { getAnalysisById, createEmptyAnalysis, saveAnalysis } from '../services/storage';
 import { QUESTION_STRUCTURE } from '../constants';
 import { TopBar } from '../components/Navbar';
 import { Button } from '../components/Button';
-import { HelpCircle, ArrowRight, Check, Target, ShieldAlert, ChevronDown, ChevronUp, ChevronLeft, Save, Edit2 } from 'lucide-react';
+import { HelpCircle, ArrowRight, Check, Target, ShieldAlert, ChevronDown, ChevronUp, ChevronLeft, Save, Edit2, Zap, Tag } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 
 const AnalysisWizard: React.FC = () => {
@@ -18,6 +18,7 @@ const AnalysisWizard: React.FC = () => {
   
   // Extra inputs for multi-field steps
   const [secondaryInput, setSecondaryInput] = useState('');
+  const [tagsInput, setTagsInput] = useState('');
 
   const [showHint, setShowHint] = useState(false);
   const [showContext, setShowContext] = useState(false);
@@ -34,6 +35,7 @@ const AnalysisWizard: React.FC = () => {
       if (existing) {
         setAnalysis(existing);
         loadStageInput(existing);
+        setTagsInput(existing.tags ? existing.tags.join(', ') : '');
       } else {
         navigate('/');
       }
@@ -83,8 +85,17 @@ const AnalysisWizard: React.FC = () => {
 
   const handleSaveAndExit = () => {
      if (analysis) {
+         // Save tags before exit if in INIT
+         const updatedTags = analysis.stage === AnalysisStage.INIT 
+            ? tagsInput.split(',').map(tag => tag.trim()).filter(tag => tag.length > 0)
+            : analysis.tags;
+
          // Save current progress locally before exiting
-         const updated = { ...analysis, updatedAt: Date.now() };
+         const updated = { 
+             ...analysis, 
+             tags: updatedTags,
+             updatedAt: Date.now() 
+         };
          saveAnalysis(updated);
          navigate('/');
      }
@@ -126,6 +137,7 @@ const AnalysisWizard: React.FC = () => {
               if (analysis.answers.length === 0) {
                   updated.stage = AnalysisStage.INIT;
                   setCurrentInput(updated.thesis);
+                  setTagsInput(updated.tags ? updated.tags.join(', ') : '');
               } else {
                   // Remove last answer
                   const lastAns = analysis.answers[analysis.answers.length - 1];
@@ -167,6 +179,8 @@ const AnalysisWizard: React.FC = () => {
             if (!analysis.title) {
                 if (!currentInput.trim()) return;
                 updatedAnalysis.title = currentInput;
+                // Save tags when setting title
+                updatedAnalysis.tags = tagsInput.split(',').map(tag => tag.trim()).filter(tag => tag.length > 0);
                 setCurrentInput(analysis.thesis || '');
             } else {
                 if (!currentInput.trim()) return;
@@ -227,6 +241,20 @@ const AnalysisWizard: React.FC = () => {
     }
   };
 
+  const applyTemplate = (tpl: Template) => {
+      if (!analysis) return;
+      
+      const updated = { ...analysis };
+      updated.title = tpl.title;
+      updated.thesis = tpl.thesis;
+      updated.stage = AnalysisStage.MODULES;
+      // Default tag for template if needed? Maybe later.
+      
+      setAnalysis(updated);
+      saveAnalysis(updated);
+      setCurrentInput(''); // ready for module 1
+  };
+
   // COMPONENTS
   
   const ContextPanel = () => {
@@ -248,6 +276,13 @@ const AnalysisWizard: React.FC = () => {
                           <div className="text-[10px] text-primary font-bold">{t.view.objectLabel}</div>
                           <div className="text-sm text-text-main">{analysis.title}</div>
                           <div className="text-xs text-text-muted italic">{analysis.thesis}</div>
+                          {analysis.tags && analysis.tags.length > 0 && (
+                             <div className="flex gap-1 mt-1">
+                                {analysis.tags.map(tag => (
+                                    <span key={tag} className="text-[9px] bg-primary/10 text-primary px-1 rounded">{tag}</span>
+                                ))}
+                             </div>
+                          )}
                       </div>
                       
                       {analysis.answers.map((a, i) => (
@@ -289,13 +324,54 @@ const AnalysisWizard: React.FC = () => {
        <p className="text-text-muted">
            {!analysis.title ? t.wizard.descName : t.wizard.descObject}
        </p>
-       <textarea
-         ref={textareaRef}
-         className="w-full p-4 rounded-xl border-2 border-primary/20 focus:border-primary focus:ring-0 bg-surface text-text-main h-40 text-lg resize-none"
-         placeholder={!analysis.title ? t.wizard.placeholderName : t.wizard.placeholderObject}
-         value={currentInput}
-         onChange={(e) => setCurrentInput(e.target.value)}
-       />
+       
+       {/* Name / Thesis Input */}
+       <div className="relative">
+           <textarea
+             ref={textareaRef}
+             className="w-full p-4 rounded-xl border-2 border-primary/20 focus:border-primary focus:ring-0 bg-surface text-text-main h-40 text-lg resize-none"
+             placeholder={!analysis.title ? t.wizard.placeholderName : t.wizard.placeholderObject}
+             value={currentInput}
+             onChange={(e) => setCurrentInput(e.target.value)}
+           />
+       </div>
+
+       {/* Tags Input - Only shown when entering title (Phase 0) */}
+       {!analysis.title && (
+           <div className="animate-fade-in">
+               <label className="text-xs font-bold text-text-muted uppercase mb-2 block flex items-center">
+                    <Tag size={12} className="mr-1"/> {t.wizard.tagsLabel}
+               </label>
+               <input
+                 type="text"
+                 className="w-full p-3 rounded-lg border border-surface-highlight bg-surface focus:ring-1 focus:ring-primary focus:border-primary text-sm"
+                 placeholder={t.wizard.tagsPlaceholder}
+                 value={tagsInput}
+                 onChange={(e) => setTagsInput(e.target.value)}
+               />
+           </div>
+       )}
+
+       {/* Scenarios / Templates - Only show when defining the title */}
+       {!analysis.title && t.templates && t.templates.length > 0 && (
+           <div className="mt-8 pt-4 border-t border-surface-highlight">
+               <h3 className="text-xs font-bold text-text-muted uppercase mb-4 tracking-wider flex items-center">
+                   <Zap size={14} className="mr-1" /> {t.wizard.templatesTitle}
+               </h3>
+               <div className="grid gap-3 sm:grid-cols-3">
+                   {t.templates.map(tpl => (
+                       <button
+                           key={tpl.id}
+                           onClick={() => applyTemplate(tpl)}
+                           className="text-left p-3 rounded-lg border border-surface-highlight bg-surface hover:border-primary hover:bg-primary/5 transition-all group"
+                       >
+                           <div className="font-bold text-sm text-text-main group-hover:text-primary mb-1">{tpl.label}</div>
+                           <div className="text-xs text-text-muted line-clamp-2 opacity-80">{tpl.title}</div>
+                       </button>
+                   ))}
+               </div>
+           </div>
+       )}
     </div>
   );
 
@@ -329,7 +405,7 @@ const AnalysisWizard: React.FC = () => {
                 />
                  {/* Feedback Animation (Stable now) */}
                  {currentInput.length > 20 && feedbackText && (
-                    <div className="absolute bottom-4 right-4 text-xs font-mono text-primary animate-fade-in bg-surface/80 px-2 py-1 rounded">
+                    <div className="absolute bottom-4 right-4 text-xs font-mono text-primary animate-fade-in bg-surface/80 px-2 py-1 rounded pointer-events-none">
                         {feedbackText}
                     </div>
                 )}
@@ -359,13 +435,15 @@ const AnalysisWizard: React.FC = () => {
                <p className="text-sm opacity-90">{t.wizard.synthesisDesc}</p>
            </div>
            
-           <textarea
-             ref={textareaRef}
-             className="w-full p-4 rounded-xl border-2 border-secondary focus:border-secondary focus:ring-0 bg-surface text-text-main h-40 text-lg resize-none shadow-inner"
-             placeholder={t.wizard.synthesisPlaceholder}
-             value={currentInput}
-             onChange={(e) => setCurrentInput(e.target.value)}
-           />
+           <div className="relative">
+               <textarea
+                 ref={textareaRef}
+                 className="w-full p-4 rounded-xl border-2 border-secondary focus:border-secondary focus:ring-0 bg-surface text-text-main h-40 text-lg resize-none shadow-inner"
+                 placeholder={t.wizard.synthesisPlaceholder}
+                 value={currentInput}
+                 onChange={(e) => setCurrentInput(e.target.value)}
+               />
+           </div>
       </div>
   );
 
@@ -379,23 +457,27 @@ const AnalysisWizard: React.FC = () => {
            <div className="space-y-4">
                <div>
                    <label className="text-xs font-bold text-danger uppercase mb-1 block">{t.wizard.vulnLabel}</label>
-                   <textarea
-                     ref={textareaRef}
-                     className="w-full p-3 rounded-lg border-2 border-danger/20 focus:border-danger bg-surface text-text-main h-32 resize-none"
-                     placeholder={t.wizard.vulnPlaceholder}
-                     value={currentInput}
-                     onChange={(e) => setCurrentInput(e.target.value)}
-                   />
+                   <div className="relative">
+                       <textarea
+                         ref={textareaRef}
+                         className="w-full p-3 rounded-lg border-2 border-danger/20 focus:border-danger bg-surface text-text-main h-32 resize-none"
+                         placeholder={t.wizard.vulnPlaceholder}
+                         value={currentInput}
+                         onChange={(e) => setCurrentInput(e.target.value)}
+                       />
+                   </div>
                </div>
                
                <div>
                    <label className="text-xs font-bold text-success uppercase mb-1 block">{t.wizard.oppLabel}</label>
-                   <textarea
-                     className="w-full p-3 rounded-lg border-2 border-success/20 focus:border-success bg-surface text-text-main h-32 resize-none"
-                     placeholder={t.wizard.oppPlaceholder}
-                     value={secondaryInput}
-                     onChange={(e) => setSecondaryInput(e.target.value)}
-                   />
+                   <div className="relative">
+                       <textarea
+                         className="w-full p-3 rounded-lg border-2 border-success/20 focus:border-success bg-surface text-text-main h-32 resize-none"
+                         placeholder={t.wizard.oppPlaceholder}
+                         value={secondaryInput}
+                         onChange={(e) => setSecondaryInput(e.target.value)}
+                       />
+                   </div>
                </div>
            </div>
       </div>
@@ -410,13 +492,15 @@ const AnalysisWizard: React.FC = () => {
                <p className="text-text-muted text-sm mt-1">{t.wizard.risksDesc}</p>
            </div>
            
-           <textarea
-             ref={textareaRef}
-             className="w-full p-4 rounded-xl border-2 border-warning/30 focus:border-warning bg-surface text-text-main h-48 text-lg resize-none"
-             placeholder={t.wizard.risksPlaceholder}
-             value={currentInput}
-             onChange={(e) => setCurrentInput(e.target.value)}
-           />
+           <div className="relative">
+               <textarea
+                 ref={textareaRef}
+                 className="w-full p-4 rounded-xl border-2 border-warning/30 focus:border-warning bg-surface text-text-main h-48 text-lg resize-none"
+                 placeholder={t.wizard.risksPlaceholder}
+                 value={currentInput}
+                 onChange={(e) => setCurrentInput(e.target.value)}
+               />
+           </div>
       </div>
   );
 

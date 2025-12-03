@@ -83,6 +83,9 @@ export const hi: TranslationData = {
     btnSave: "सहेजें और बाहर निकलें",
     btnFinish: "ब्रीफिंग उत्पन्न करें",
     contextLabel: "अभियान संदर्भ",
+
+    tagsLabel: "टैग",
+    tagsPlaceholder: "अल्पविराम से अलग की गई श्रेणियां (जैसे कार्य, तत्काल)",
     
     synthesisTitle: "चरण 2: केंद्रीय विरोधाभास",
     synthesisDesc: "चरण 1 के उत्तरों का विश्लेषण करें। इस प्रक्रिया को चलाने वाले मुख्य विरोधाभास (X बनाम Y का संघर्ष) को खोजें।",
@@ -102,6 +105,8 @@ export const hi: TranslationData = {
     
     hintLabel: "पद्धतिविद् का नोट:",
     loading: "विश्लेषणात्मक मॉड्यूल लॉन्च हो रहे हैं...",
+
+    templatesTitle: "मानक परिदृश्य"
   },
   view: {
     objectLabel: "विश्लेषण की वस्तु",
@@ -114,6 +119,7 @@ export const hi: TranslationData = {
     btnShare: "केंद्र को एन्क्रिप्ट करें",
     btnPrint: "प्रिंट / PDF",
     btnExportMD: ".MD डाउनलोड करें",
+    btnExportJSON: ".JSON डाउनलोड करें",
     btnArchive: "अभिलेखागार में",
     confirmArchive: "अभियान पूरा करें और आर्काइव करें?",
     shareSuccess: "डेटा कॉपी किया गया।"

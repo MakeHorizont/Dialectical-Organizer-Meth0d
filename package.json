@@ -1,7 +1,7 @@
 {
   "name": "meth0d",
   "private": true,
-  "version": "2.1.0",
+  "version": "2.3.0",
   "description": "Dialectical Organizer Protocol",
   "author": "Meth0d Collective",
   "main": "electron-main.cjs",

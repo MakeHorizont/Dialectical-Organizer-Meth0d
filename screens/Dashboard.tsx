@@ -40,7 +40,8 @@ const Dashboard: React.FC = () => {
           // Search Logic (Case insensitive)
           const matchesSearch = 
              (analysis.title || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
-             (analysis.thesis || '').toLowerCase().includes(searchQuery.toLowerCase());
+             (analysis.thesis || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+             (analysis.tags && analysis.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase())));
 
           // Status Logic
           let matchesStatus = true;
@@ -145,7 +146,7 @@ const Dashboard: React.FC = () => {
                 <div className="flex justify-between items-start">
                   <div>
                     <h3 className="font-bold text-lg text-text-main mb-1">{analysis.title || t.dashboard.untitled}</h3>
-                    <div className="flex items-center space-x-2">
+                    <div className="flex flex-wrap items-center gap-2">
                         <span className={`text-xs font-bold px-2 py-1 rounded ${
                             analysis.stage === AnalysisStage.COMPLETED 
                             ? 'bg-success/10 text-success' 
@@ -153,9 +154,13 @@ const Dashboard: React.FC = () => {
                         }`}>
                         {getStageLabel(analysis.stage)}
                         </span>
-                        <span className="text-xs text-text-muted">
-                            {new Date(analysis.updatedAt).toLocaleDateString()}
-                        </span>
+                        
+                        {/* Tags Display */}
+                        {analysis.tags && analysis.tags.map(tag => (
+                            <span key={tag} className="text-[10px] bg-surface-highlight px-2 py-1 rounded text-text-muted border border-surface-highlight">
+                                {tag}
+                            </span>
+                        ))}
                     </div>
                   </div>
                   <div className="text-primary opacity-50 group-hover:opacity-100 transition-opacity">
@@ -167,6 +172,12 @@ const Dashboard: React.FC = () => {
                         {analysis.thesis}
                     </p>
                 )}
+                
+                <div className="mt-2 flex justify-end">
+                    <span className="text-[10px] text-text-muted">
+                        {new Date(analysis.updatedAt).toLocaleDateString()}
+                    </span>
+                </div>
               </Card>
             ))}
           </div>

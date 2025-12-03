@@ -83,6 +83,9 @@ export const es: TranslationData = {
     btnSave: "Guardar y Salir",
     btnFinish: "Generar Informe",
     contextLabel: "Contexto de la Operación",
+
+    tagsLabel: "Etiquetas",
+    tagsPlaceholder: "Categorías separadas por comas (ej. Trabajo, Urgente)",
     
     synthesisTitle: "Fase 2: Contradicción Central",
     synthesisDesc: "Analiza las respuestas de la Fase 1. Encuentra la ÚNICA contradicción principal (Lucha de X contra Y) que impulsa este proceso.",
@@ -102,18 +105,21 @@ export const es: TranslationData = {
     
     hintLabel: "Nota del Metodólogo:",
     loading: "Lanzando módulos analíticos...",
+
+    templatesTitle: "Escenarios Estándar"
   },
   view: {
     objectLabel: "OBJETO DE ANÁLISIS",
     contradictionLabel: "CONTRADICCIÓN CENTRAL",
     briefingTitle: "INFORME ESTRATÉGICO",
-    modulesTitle: "DATOS DEL MÓDULO (FASE 1)",
+    modulesTitle: "MATRIZ DE DATOS",
     strategyTitle: "PLAN DE ACCIÓN (FASE 3)",
     risksTitle: "AUDITORÍA DE RIESGOS (FASE 4)",
     btnEdit: "Corrección",
     btnShare: "Cifrar al Centro",
     btnPrint: "Imprimir / PDF",
     btnExportMD: "Descargar .MD",
+    btnExportJSON: "Descargar .JSON",
     btnArchive: "Al Archivo",
     confirmArchive: "¿Completar operación y archivar?",
     shareSuccess: "Datos copiados."

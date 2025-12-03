@@ -83,6 +83,9 @@ export const ru: TranslationData = {
     btnSave: "Сохранить",
     btnFinish: "Завершить",
     contextLabel: "Контекст",
+
+    tagsLabel: "Метки",
+    tagsPlaceholder: "Категории через запятую (напр. Работа, Срочно)",
     
     synthesisTitle: "Фаза 2: Ключевое Противоречие",
     synthesisDesc: "Посмотри на ответы Фазы 1. В чем суть конфликта? Какие две силы столкнулись?",
@@ -102,18 +105,21 @@ export const ru: TranslationData = {
     
     hintLabel: "Подсказка:",
     loading: "Загрузка модулей...",
+
+    templatesTitle: "Типовые сценарии"
   },
   view: {
     objectLabel: "ОБЪЕКТ",
     contradictionLabel: "СУТЬ ПРОТИВОРЕЧИЯ",
     briefingTitle: "СТРАТЕГИЧЕСКИЙ ОТЧЕТ",
-    modulesTitle: "ДАННЫЕ АНАЛИЗА",
+    modulesTitle: "МАТРИЦА ДАННЫХ",
     strategyTitle: "ПЛАН ДЕЙСТВИЙ",
     risksTitle: "РИСКИ",
     btnEdit: "Изменить",
     btnShare: "Поделиться",
     btnPrint: "Печать / PDF",
     btnExportMD: "Скачать .MD",
+    btnExportJSON: "Скачать .JSON",
     btnArchive: "В Архив",
     confirmArchive: "Завершить работу над задачей?",
     shareSuccess: "Скопировано в буфер."

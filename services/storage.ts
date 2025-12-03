@@ -64,6 +64,7 @@ export const createEmptyAnalysis = (): Analysis => {
     stage: AnalysisStage.INIT,
     answers: [],
     isArchived: false,
+    tags: [], // Initialize tags array
   };
 };
 
@@ -88,22 +89,53 @@ export const exportData = (): void => {
 };
 
 /**
+ * Downloads a single analysis as a JSON file.
+ */
+export const exportSingleAnalysis = (id: string): void => {
+    const analysis = getAnalysisById(id);
+    if (!analysis) return;
+
+    const blob = new Blob([JSON.stringify(analysis, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    
+    // Clean title for filename
+    const safeTitle = (analysis.title || 'Untitled').replace(/[^a-z0-9]/gi, '_').toLowerCase();
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `Meth0d_${safeTitle}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+};
+
+/**
  * Imports analysis data from a JSON string, merging with existing data.
  * Merging strategy: IDs match -> overwrite. New IDs -> add.
+ * Supports both array (backup) and single object (shared analysis).
  */
 export const importData = (jsonString: string): boolean => {
   try {
     const imported = JSON.parse(jsonString);
-    if (!Array.isArray(imported)) throw new Error("Invalid format");
+    let itemsToImport: Analysis[] = [];
+
+    if (Array.isArray(imported)) {
+        itemsToImport = imported;
+    } else if (typeof imported === 'object' && imported !== null && imported.id) {
+        // Single analysis import
+        itemsToImport = [imported];
+    } else {
+        throw new Error("Invalid format");
+    }
     
     // Basic validation of schema
-    const isValid = imported.every(item => item.id && item.createdAt && item.stage);
+    const isValid = itemsToImport.every(item => item.id && item.createdAt && item.stage);
     if (!isValid) throw new Error("Invalid data schema");
 
     const current = getAnalyses();
     const map = new Map(current.map(i => [i.id, i]));
     
-    imported.forEach((item: Analysis) => {
+    itemsToImport.forEach((item: Analysis) => {
         // Ensure imported items are compatible
         map.set(item.id, item);
     });

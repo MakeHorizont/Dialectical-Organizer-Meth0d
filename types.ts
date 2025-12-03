@@ -39,6 +39,7 @@ export interface Analysis {
   stage: AnalysisStage;
   answers: Answer[];
   isArchived: boolean;
+  tags?: string[]; // New: Tags for categorization
 }
 
 export interface Quote {
@@ -138,6 +139,9 @@ export interface TranslationData {
     btnFinish: string;
     contextLabel: string;
     
+    tagsLabel: string;
+    tagsPlaceholder: string;
+
     synthesisTitle: string;
     synthesisDesc: string;
     synthesisPlaceholder: string;
@@ -156,6 +160,8 @@ export interface TranslationData {
     
     hintLabel: string;
     loading: string;
+    
+    templatesTitle: string;
   };
   view: {
     objectLabel: string;
@@ -168,6 +174,7 @@ export interface TranslationData {
     btnShare: string;
     btnPrint: string;
     btnExportMD: string;
+    btnExportJSON: string;
     btnArchive: string;
     confirmArchive: string;
     shareSuccess: string;

@@ -1,11 +1,11 @@
 
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getAnalysisById, archiveAnalysis } from '../services/storage';
+import { getAnalysisById, archiveAnalysis, exportSingleAnalysis } from '../services/storage';
 import { Analysis } from '../types';
 import { TopBar } from '../components/Navbar';
 import { Button } from '../components/Button';
-import { Archive, Edit3, Share2, FileText, ShieldAlert, Target, CheckCircle2, Printer, FileDown } from 'lucide-react';
+import { Archive, Edit3, Share2, FileText, ShieldAlert, Target, CheckCircle2, Printer, FileDown, FileJson } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 
 const AnalysisView: React.FC = () => {
@@ -37,12 +37,18 @@ const AnalysisView: React.FC = () => {
       window.print();
   };
 
+  const handleExportJSON = () => {
+      exportSingleAnalysis(analysis.id);
+  };
+
   const handleExportMarkdown = () => {
       const date = new Date(analysis.createdAt).toLocaleDateString();
+      const tags = analysis.tags ? analysis.tags.join(', ') : '';
       const content = `
 # ${analysis.title}
 **Date:** ${date}
 **Ref:** ${analysis.id}
+**Tags:** ${tags}
 
 ---
 
@@ -127,6 +133,7 @@ ${analysis.risks}
             * { font-family: 'Times New Roman', serif !important; }
             .print-header { display: block !important; margin-bottom: 20px; border-bottom: 2px solid black; padding-bottom: 10px; }
             .print-hidden { display: none !important; }
+            .print-grid { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 20px !important; }
           }
           .print-header { display: none; }
       `}</style>
@@ -142,9 +149,20 @@ ${analysis.risks}
         </div>
 
         <div className="flex justify-between items-center mb-2">
-            <span className="bg-secondary text-text-inverted text-xs font-mono px-2 py-1 rounded">
-                REF: {analysis.id.slice(0,8).toUpperCase()}
-            </span>
+            <div className="flex flex-col">
+                <span className="bg-secondary text-text-inverted text-xs font-mono px-2 py-1 rounded inline-block w-max mb-1">
+                    REF: {analysis.id.slice(0,8).toUpperCase()}
+                </span>
+                {analysis.tags && analysis.tags.length > 0 && (
+                    <div className="flex gap-1">
+                        {analysis.tags.map(tag => (
+                            <span key={tag} className="text-[10px] text-text-muted border border-surface-highlight px-1 rounded">
+                                {tag}
+                            </span>
+                        ))}
+                    </div>
+                )}
+            </div>
             <span className="text-xs text-text-muted font-mono">
                 {new Date(analysis.createdAt).toLocaleDateString()}
             </span>
@@ -167,7 +185,7 @@ ${analysis.risks}
         </section>
 
         {/* STRATEGY SECTION */}
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="grid gap-4 md:grid-cols-2 print-grid">
              {/* Vulnerabilities */}
             <div className="bg-danger/5 rounded-lg p-4 border border-danger/20">
                 <h4 className="text-xs font-bold text-danger uppercase mb-2 flex items-center">
@@ -195,15 +213,19 @@ ${analysis.risks}
             </section>
         )}
 
-        {/* MODULE DATA ACCORDION (Simplified) */}
-        <div className="space-y-2 mt-8">
-            <h3 className="text-xs font-bold text-text-muted uppercase px-2">{t.view.modulesTitle}</h3>
-            {analysis.answers.map((ans, idx) => (
-                <div key={idx} className="bg-surface rounded px-4 py-3 border border-surface-highlight">
-                    <p className="text-[10px] text-primary font-bold uppercase mb-1">{getCategoryLabel(ans.questionId)}</p>
-                    <p className="text-sm text-text-main">{ans.text}</p>
-                </div>
-            ))}
+        {/* MODULE DATA - QUADRANT GRID VIEW */}
+        <div className="mt-8">
+            <h3 className="text-xs font-bold text-text-muted uppercase px-2 mb-2">{t.view.modulesTitle}</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 print-grid">
+                {analysis.answers.map((ans, idx) => (
+                    <div key={idx} className="bg-surface rounded-lg px-4 py-4 border border-surface-highlight shadow-sm h-full">
+                        <p className="text-[10px] text-primary font-bold uppercase mb-2 border-b border-surface-highlight pb-1">
+                            {getCategoryLabel(ans.questionId)}
+                        </p>
+                        <p className="text-sm text-text-main leading-relaxed">{ans.text}</p>
+                    </div>
+                ))}
+            </div>
         </div>
 
         <div className="grid grid-cols-2 gap-4 pt-4 no-print">
@@ -215,7 +237,11 @@ ${analysis.risks}
                 <FileDown size={18} className="mr-2" /> {t.view.btnExportMD}
             </Button>
 
-            <Button variant="outline" onClick={handlePrint} className="col-span-2">
+            <Button variant="outline" onClick={handleExportJSON}>
+                <FileJson size={18} className="mr-2" /> {t.view.btnExportJSON}
+            </Button>
+
+            <Button variant="outline" onClick={handlePrint} className="">
                 <Printer size={18} className="mr-2" /> {t.view.btnPrint}
             </Button>
 

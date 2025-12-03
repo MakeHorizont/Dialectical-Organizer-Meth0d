@@ -4,10 +4,10 @@ import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 import { languageNames } from '../language';
 import { LanguageCode } from '../types';
-import { Globe, ArrowRight } from 'lucide-react';
+import { Globe } from 'lucide-react';
 
 const LanguageSelection: React.FC = () => {
-  const { setLanguage, currentLanguage } = useLanguage();
+  const { setLanguage } = useLanguage();
   const navigate = useNavigate();
 
   const handleSelect = (code: string) => {
@@ -23,7 +23,7 @@ const LanguageSelection: React.FC = () => {
       <div className="max-w-sm w-full space-y-8">
         
         <div className="text-center space-y-4">
-          <div className="bg-primary/10 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 animate-pulse-slow">
+          <div className="bg-surface border border-surface-highlight w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm">
             <Globe size={40} className="text-primary" />
           </div>
           <h1 className="text-2xl font-bold text-text-main">
@@ -39,27 +39,22 @@ const LanguageSelection: React.FC = () => {
             <button
               key={code}
               onClick={() => handleSelect(code)}
-              className={`w-full p-4 rounded-xl border transition-all duration-200 flex items-center justify-between group ${
-                currentLanguage === code 
-                  ? 'bg-primary text-text-inverted border-primary shadow-lg shadow-primary/30' 
-                  : 'bg-surface text-text-main border-surface-highlight hover:border-primary/50'
-              }`}
+              className="w-full p-4 rounded-xl border border-surface-highlight transition-all duration-200 flex items-center justify-between group bg-surface text-text-main hover:border-primary/50 hover:shadow-md"
             >
-              <span className="font-medium text-lg">{name}</span>
-              {currentLanguage === code && (
-                <ArrowRight size={20} className="animate-slide-up" />
-              )}
-              <span className={`text-xs uppercase font-bold tracking-widest opacity-50 group-hover:opacity-100 ${
-                 currentLanguage === code ? 'text-text-inverted' : 'text-primary' 
-              }`}>
-                {code}
-              </span>
+              <div className="flex items-center gap-3">
+                  <span className="text-xs uppercase font-bold tracking-widest px-2 py-1 rounded bg-surface-highlight text-text-muted group-hover:bg-primary/10 group-hover:text-primary transition-colors">
+                    {code}
+                  </span>
+                  <span className="font-medium text-lg text-text-main group-hover:text-primary transition-colors">
+                      {name}
+                  </span>
+              </div>
             </button>
           ))}
         </div>
 
         <div className="text-center text-xs text-text-muted opacity-60 mt-8">
-            Dialectical Organizer v2.0
+            Dialectical Organizer v2.4.0
         </div>
       </div>
     </div>

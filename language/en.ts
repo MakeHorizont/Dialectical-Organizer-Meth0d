@@ -83,6 +83,9 @@ export const en: TranslationData = {
     btnSave: "Save",
     btnFinish: "Complete",
     contextLabel: "Context",
+
+    tagsLabel: "Labels",
+    tagsPlaceholder: "Comma separated categories (e.g. Work, Urgent)",
     
     synthesisTitle: "Phase 2: Key Contradiction",
     synthesisDesc: "Look at Phase 1 answers. What is the core conflict? Which two forces are colliding?",
@@ -102,18 +105,21 @@ export const en: TranslationData = {
     
     hintLabel: "Hint:",
     loading: "Loading modules...",
+
+    templatesTitle: "Standard Scenarios"
   },
   view: {
     objectLabel: "OBJECT",
     contradictionLabel: "CORE CONTRADICTION",
     briefingTitle: "STRATEGIC REPORT",
-    modulesTitle: "ANALYSIS DATA",
+    modulesTitle: "DATA MATRIX",
     strategyTitle: "ACTION PLAN",
     risksTitle: "RISKS",
     btnEdit: "Edit",
     btnShare: "Share",
     btnPrint: "Print / PDF",
     btnExportMD: "Download .MD",
+    btnExportJSON: "Download .JSON",
     btnArchive: "Archive",
     confirmArchive: "Complete this task?",
     shareSuccess: "Copied to clipboard."
