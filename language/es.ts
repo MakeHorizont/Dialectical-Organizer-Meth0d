@@ -122,7 +122,11 @@ export const es: TranslationData = {
     btnExportJSON: "Descargar .JSON",
     btnArchive: "Al Archivo",
     confirmArchive: "¿Completar operación y archivar?",
-    shareSuccess: "Datos copiados."
+    shareSuccess: "Datos copiados.",
+
+    praxisTitle: "DIARIO DE PRAXIS",
+    praxisPlaceholder: "Registrar evento, resultado u observación...",
+    btnAddLog: "Agregar"
   },
   archive: {
     title: "Archivos",

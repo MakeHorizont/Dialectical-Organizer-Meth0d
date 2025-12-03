@@ -122,7 +122,11 @@ export const zh: TranslationData = {
     btnExportJSON: "下载 .JSON",
     btnArchive: "归档",
     confirmArchive: "完成行动并归档？",
-    shareSuccess: "数据已复制。"
+    shareSuccess: "数据已复制。",
+
+    praxisTitle: "实践日志",
+    praxisPlaceholder: "记录事件、结果或新观察...",
+    btnAddLog: "添加条目"
   },
   archive: {
     title: "档案馆",

@@ -122,7 +122,11 @@ export const hi: TranslationData = {
     btnExportJSON: ".JSON डाउनलोड करें",
     btnArchive: "अभिलेखागार में",
     confirmArchive: "अभियान पूरा करें और आर्काइव करें?",
-    shareSuccess: "डेटा कॉपी किया गया।"
+    shareSuccess: "डेटा कॉपी किया गया।",
+
+    praxisTitle: "अभ्यास लॉग",
+    praxisPlaceholder: "घटना, परिणाम या नया अवलोकन लॉग करें...",
+    btnAddLog: "प्रविष्टि जोड़ें"
   },
   archive: {
     title: "अभिलेखागार",

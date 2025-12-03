@@ -122,7 +122,11 @@ export const ru: TranslationData = {
     btnExportJSON: "Скачать .JSON",
     btnArchive: "В Архив",
     confirmArchive: "Завершить работу над задачей?",
-    shareSuccess: "Скопировано в буфер."
+    shareSuccess: "Скопировано в буфер.",
+
+    praxisTitle: "ДНЕВНИК ПРАКТИКИ",
+    praxisPlaceholder: "Записать событие, результат или новое наблюдение...",
+    btnAddLog: "Добавить"
   },
   archive: {
     title: "Архив",

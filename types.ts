@@ -25,6 +25,12 @@ export interface Answer {
   timestamp: number;
 }
 
+export interface PraxisLogEntry {
+  id: string;
+  text: string;
+  timestamp: number;
+}
+
 export interface Analysis {
   id: string;
   title: string;
@@ -39,7 +45,8 @@ export interface Analysis {
   stage: AnalysisStage;
   answers: Answer[];
   isArchived: boolean;
-  tags?: string[]; // New: Tags for categorization
+  tags?: string[];
+  praxisLog?: PraxisLogEntry[]; // New: Journal entries for execution tracking
 }
 
 export interface Quote {
@@ -178,6 +185,10 @@ export interface TranslationData {
     btnArchive: string;
     confirmArchive: string;
     shareSuccess: string;
+    
+    praxisTitle: string;
+    praxisPlaceholder: string;
+    btnAddLog: string;
   };
   archive: {
     title: string;

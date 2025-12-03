@@ -1,5 +1,5 @@
 
-import { Analysis, AnalysisStage } from '../types';
+import { Analysis, AnalysisStage, PraxisLogEntry } from '../types';
 
 const STORAGE_KEY = 'dialectical_organizer_data_v2'; 
 
@@ -64,8 +64,27 @@ export const createEmptyAnalysis = (): Analysis => {
     stage: AnalysisStage.INIT,
     answers: [],
     isArchived: false,
-    tags: [], // Initialize tags array
+    tags: [],
+    praxisLog: [], // Initialize empty log
   };
+};
+
+export const addPraxisLog = (analysisId: string, text: string): void => {
+    const analyses = getAnalyses();
+    const target = analyses.find(a => a.id === analysisId);
+    if (target) {
+        if (!target.praxisLog) target.praxisLog = [];
+        
+        const newEntry: PraxisLogEntry = {
+            id: crypto.randomUUID(),
+            text,
+            timestamp: Date.now()
+        };
+        
+        target.praxisLog.unshift(newEntry); // Newest first
+        target.updatedAt = Date.now();
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(analyses));
+    }
 };
 
 /**

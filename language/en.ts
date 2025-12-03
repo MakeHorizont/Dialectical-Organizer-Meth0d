@@ -122,7 +122,11 @@ export const en: TranslationData = {
     btnExportJSON: "Download .JSON",
     btnArchive: "Archive",
     confirmArchive: "Complete this task?",
-    shareSuccess: "Copied to clipboard."
+    shareSuccess: "Copied to clipboard.",
+
+    praxisTitle: "PRAXIS LOG",
+    praxisPlaceholder: "Log an event, result, or new observation...",
+    btnAddLog: "Add Entry"
   },
   archive: {
     title: "Archive",
