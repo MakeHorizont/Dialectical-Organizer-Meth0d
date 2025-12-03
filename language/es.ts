@@ -126,7 +126,12 @@ export const es: TranslationData = {
 
     praxisTitle: "DIARIO DE PRAXIS",
     praxisPlaceholder: "Registrar evento, resultado u observación...",
-    btnAddLog: "Agregar"
+    btnAddLog: "Agregar",
+
+    connectionsTitle: "CONEXIONES SISTÉMICAS",
+    btnAddConnection: "Vincular a...",
+    noConnections: "No se encontraron conexiones. El objeto está aislado (metafísico).",
+    selectConnection: "Seleccionar objeto para vincular:"
   },
   archive: {
     title: "Archivos",

@@ -126,7 +126,12 @@ export const en: TranslationData = {
 
     praxisTitle: "PRAXIS LOG",
     praxisPlaceholder: "Log an event, result, or new observation...",
-    btnAddLog: "Add Entry"
+    btnAddLog: "Add Entry",
+
+    connectionsTitle: "SYSTEMIC CONNECTIONS",
+    btnAddConnection: "Link to...",
+    noConnections: "No connections found. Object is isolated (metaphysical).",
+    selectConnection: "Select object to link:"
   },
   archive: {
     title: "Archive",

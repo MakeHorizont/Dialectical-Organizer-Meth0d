@@ -65,7 +65,8 @@ export const createEmptyAnalysis = (): Analysis => {
     answers: [],
     isArchived: false,
     tags: [],
-    praxisLog: [], // Initialize empty log
+    praxisLog: [],
+    relatedIds: [], // Initialize empty connections
   };
 };
 
@@ -83,6 +84,38 @@ export const addPraxisLog = (analysisId: string, text: string): void => {
         
         target.praxisLog.unshift(newEntry); // Newest first
         target.updatedAt = Date.now();
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(analyses));
+    }
+};
+
+// Creates a bi-directional link between two analyses
+export const toggleAnalysisConnection = (id1: string, id2: string): void => {
+    if (id1 === id2) return;
+    
+    const analyses = getAnalyses();
+    const a1 = analyses.find(a => a.id === id1);
+    const a2 = analyses.find(a => a.id === id2);
+    
+    if (a1 && a2) {
+        // Initialize arrays if missing
+        if (!a1.relatedIds) a1.relatedIds = [];
+        if (!a2.relatedIds) a2.relatedIds = [];
+        
+        const isConnected = a1.relatedIds.includes(id2);
+        
+        if (isConnected) {
+            // Disconnect
+            a1.relatedIds = a1.relatedIds.filter(id => id !== id2);
+            a2.relatedIds = a2.relatedIds.filter(id => id !== id1);
+        } else {
+            // Connect
+            a1.relatedIds.push(id2);
+            a2.relatedIds.push(id1);
+        }
+        
+        a1.updatedAt = Date.now();
+        a2.updatedAt = Date.now();
+        
         localStorage.setItem(STORAGE_KEY, JSON.stringify(analyses));
     }
 };

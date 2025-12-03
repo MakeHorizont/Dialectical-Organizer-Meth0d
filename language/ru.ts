@@ -126,7 +126,12 @@ export const ru: TranslationData = {
 
     praxisTitle: "ДНЕВНИК ПРАКТИКИ",
     praxisPlaceholder: "Записать событие, результат или новое наблюдение...",
-    btnAddLog: "Добавить"
+    btnAddLog: "Добавить",
+
+    connectionsTitle: "СИСТЕМНЫЕ СВЯЗИ",
+    btnAddConnection: "Связать...",
+    noConnections: "Связей не обнаружено. Объект изолирован (метафизично).",
+    selectConnection: "Выберите объект для связи:"
   },
   archive: {
     title: "Архив",

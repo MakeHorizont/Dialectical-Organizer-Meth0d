@@ -126,7 +126,12 @@ export const hi: TranslationData = {
 
     praxisTitle: "अभ्यास लॉग",
     praxisPlaceholder: "घटना, परिणाम या नया अवलोकन लॉग करें...",
-    btnAddLog: "प्रविष्टि जोड़ें"
+    btnAddLog: "प्रविष्टि जोड़ें",
+
+    connectionsTitle: "प्रणालीगत संबंध",
+    btnAddConnection: "लिंक करें...",
+    noConnections: "कोई कनेक्शन नहीं मिला। वस्तु पृथक (आध्यात्मिक) है।",
+    selectConnection: "लिंक करने के लिए वस्तु चुनें:"
   },
   archive: {
     title: "अभिलेखागार",

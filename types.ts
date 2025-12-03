@@ -46,7 +46,8 @@ export interface Analysis {
   answers: Answer[];
   isArchived: boolean;
   tags?: string[];
-  praxisLog?: PraxisLogEntry[]; // New: Journal entries for execution tracking
+  praxisLog?: PraxisLogEntry[];
+  relatedIds?: string[]; // New: IDs of connected analyses
 }
 
 export interface Quote {
@@ -189,6 +190,11 @@ export interface TranslationData {
     praxisTitle: string;
     praxisPlaceholder: string;
     btnAddLog: string;
+
+    connectionsTitle: string;
+    btnAddConnection: string;
+    noConnections: string;
+    selectConnection: string;
   };
   archive: {
     title: string;

@@ -126,7 +126,12 @@ export const zh: TranslationData = {
 
     praxisTitle: "实践日志",
     praxisPlaceholder: "记录事件、结果或新观察...",
-    btnAddLog: "添加条目"
+    btnAddLog: "添加条目",
+
+    connectionsTitle: "系统联系",
+    btnAddConnection: "链接到...",
+    noConnections: "未找到连接。对象是孤立的（形而上学的）。",
+    selectConnection: "选择要链接的对象："
   },
   archive: {
     title: "档案馆",
