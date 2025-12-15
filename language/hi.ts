@@ -131,7 +131,11 @@ export const hi: TranslationData = {
     connectionsTitle: "प्रणालीगत संबंध",
     btnAddConnection: "लिंक करें...",
     noConnections: "कोई कनेक्शन नहीं मिला। वस्तु पृथक (आध्यात्मिक) है।",
-    selectConnection: "लिंक करने के लिए वस्तु चुनें:"
+    selectConnection: "लिंक करने के लिए वस्तु चुनें:",
+
+    tacticsTitle: "रणनीति (चेकलिस्ट)",
+    tacticsPlaceholder: "नया सामरिक कार्य...",
+    btnAddItem: "कार्य जोड़ें"
   },
   archive: {
     title: "अभिलेखागार",

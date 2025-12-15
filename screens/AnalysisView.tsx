@@ -1,11 +1,11 @@
 
 import React, { useEffect, useState, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getAnalysisById, archiveAnalysis, exportSingleAnalysis, addPraxisLog, getAnalyses, toggleAnalysisConnection } from '../services/storage';
+import { getAnalysisById, archiveAnalysis, exportSingleAnalysis, addPraxisLog, getAnalyses, toggleAnalysisConnection, addActionItem, toggleActionItem, deleteActionItem } from '../services/storage';
 import { Analysis } from '../types';
 import { TopBar } from '../components/Navbar';
 import { Button } from '../components/Button';
-import { Archive, Edit3, Share2, FileText, ShieldAlert, Target, CheckCircle2, Printer, FileDown, FileJson, Plus, Circle, Link2, X } from 'lucide-react';
+import { Archive, Edit3, Share2, FileText, ShieldAlert, Target, CheckCircle2, Printer, FileDown, FileJson, Plus, Circle, Link2, X, ListTodo, Square, CheckSquare, Trash2 } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 
 const AnalysisView: React.FC = () => {
@@ -17,6 +17,9 @@ const AnalysisView: React.FC = () => {
   
   // Praxis Log State
   const [logInput, setLogInput] = useState('');
+
+  // Checklist State
+  const [taskInput, setTaskInput] = useState('');
 
   // Connections State
   const [allAnalyses, setAllAnalyses] = useState<Analysis[]>([]);
@@ -90,6 +93,12 @@ const AnalysisView: React.FC = () => {
              relatedAnalyses.map(a => `- ${a.title}`).join('\n');
       }
 
+      let tacticsSection = '';
+      if (analysis.checklist && analysis.checklist.length > 0) {
+          tacticsSection = `\n## Tactical Plan\n` +
+             analysis.checklist.map(i => `- [${i.isDone ? 'x' : ' '}] ${i.text}`).join('\n');
+      }
+
       const content = `
 # ${analysis.title}
 **Date:** ${date}
@@ -113,6 +122,8 @@ ${analysis.vulnerabilities}
 
 ### ${t.wizard.oppLabel}
 ${analysis.opportunities}
+
+${tacticsSection}
 
 ## 5. ${t.view.risksTitle}
 ${analysis.risks}
@@ -176,6 +187,23 @@ ${connectionsSection}
       refreshData();
   };
 
+  const handleAddTask = () => {
+      if (!taskInput.trim()) return;
+      addActionItem(analysis.id, taskInput);
+      setTaskInput('');
+      refreshData();
+  };
+
+  const handleToggleTask = (itemId: string) => {
+      toggleActionItem(analysis.id, itemId);
+      refreshData();
+  };
+
+  const handleDeleteTask = (itemId: string) => {
+      deleteActionItem(analysis.id, itemId);
+      refreshData();
+  };
+
   return (
     <>
       <style>{`
@@ -193,6 +221,7 @@ ${connectionsSection}
             .print-header { display: block !important; margin-bottom: 20px; border-bottom: 2px solid black; padding-bottom: 10px; }
             .print-hidden { display: none !important; }
             .print-grid { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 20px !important; }
+            .checklist-item { border-bottom: 1px solid #eee; padding: 5px 0; }
           }
           .print-header { display: none; }
       `}</style>
@@ -301,6 +330,58 @@ ${connectionsSection}
                 <p className="text-sm text-text-main whitespace-pre-line">{analysis.opportunities || "N/A"}</p>
             </div>
         </div>
+
+        {/* TACTICAL CHECKLIST */}
+        <section className="bg-surface rounded-lg p-4 border border-surface-highlight shadow-sm">
+            <h3 className="text-xs font-bold text-text-muted uppercase tracking-wider mb-3 flex items-center">
+                <ListTodo size={14} className="mr-2"/> {t.view.tacticsTitle}
+            </h3>
+            
+            {/* Input */}
+            <div className="flex gap-2 mb-4 no-print">
+                <input 
+                    type="text" 
+                    className="flex-grow bg-surface-highlight/50 border border-surface-highlight rounded px-3 py-2 text-sm outline-none focus:border-primary"
+                    placeholder={t.view.tacticsPlaceholder}
+                    value={taskInput}
+                    onChange={(e) => setTaskInput(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && handleAddTask()}
+                />
+                <button 
+                    onClick={handleAddTask}
+                    className="bg-primary text-text-inverted px-3 rounded flex items-center"
+                >
+                    <Plus size={16} />
+                </button>
+            </div>
+
+            {/* List */}
+            <div className="space-y-2">
+                {(!analysis.checklist || analysis.checklist.length === 0) ? (
+                    <div className="text-sm text-text-muted italic opacity-50 text-center py-2">No tactical items yet.</div>
+                ) : (
+                    analysis.checklist.map(item => (
+                        <div key={item.id} className="checklist-item flex items-start group">
+                            <button 
+                                onClick={() => handleToggleTask(item.id)}
+                                className={`mt-0.5 mr-3 flex-shrink-0 transition-colors ${item.isDone ? 'text-success' : 'text-text-muted hover:text-primary'}`}
+                            >
+                                {item.isDone ? <CheckSquare size={18} /> : <Square size={18} />}
+                            </button>
+                            <span className={`text-sm flex-grow transition-all ${item.isDone ? 'line-through text-text-muted opacity-60' : 'text-text-main'}`}>
+                                {item.text}
+                            </span>
+                            <button 
+                                onClick={() => handleDeleteTask(item.id)}
+                                className="ml-2 text-text-muted hover:text-danger opacity-0 group-hover:opacity-100 transition-opacity no-print"
+                            >
+                                <Trash2 size={14} />
+                            </button>
+                        </div>
+                    ))
+                )}
+            </div>
+        </section>
 
         {/* RISKS */}
         {analysis.risks && (

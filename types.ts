@@ -31,6 +31,12 @@ export interface PraxisLogEntry {
   timestamp: number;
 }
 
+export interface ActionItem {
+  id: string;
+  text: string;
+  isDone: boolean;
+}
+
 export interface Analysis {
   id: string;
   title: string;
@@ -47,7 +53,9 @@ export interface Analysis {
   isArchived: boolean;
   tags?: string[];
   praxisLog?: PraxisLogEntry[];
-  relatedIds?: string[]; // New: IDs of connected analyses
+  relatedIds?: string[];
+  checklist?: ActionItem[]; // New: Tactical action items
+  isPinned?: boolean;       // New: Priority status
 }
 
 export interface Quote {
@@ -195,6 +203,10 @@ export interface TranslationData {
     btnAddConnection: string;
     noConnections: string;
     selectConnection: string;
+
+    tacticsTitle: string;
+    tacticsPlaceholder: string;
+    btnAddItem: string;
   };
   archive: {
     title: string;

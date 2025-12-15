@@ -1,11 +1,11 @@
 
 import React, { useEffect, useState, useMemo } from 'react';
-import { getAnalyses } from '../services/storage';
+import { getAnalyses, togglePinAnalysis } from '../services/storage';
 import { Analysis, AnalysisStage, Quote } from '../types';
 import { Card } from '../components/Card';
 import { TopBar } from '../components/Navbar';
 import { useNavigate } from 'react-router-dom';
-import { Edit3, Eye, Search, Filter } from 'lucide-react';
+import { Edit3, Eye, Search, Filter, Pin } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 
 const Dashboard: React.FC = () => {
@@ -18,10 +18,19 @@ const Dashboard: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<'ALL' | 'ACTIVE' | 'DONE'>('ACTIVE');
 
-  useEffect(() => {
+  const loadData = () => {
     const all = getAnalyses();
-    // Initially load non-archived items. The Archive screen handles archived ones.
-    setAnalyses(all.filter(a => !a.isArchived).sort((a, b) => b.updatedAt - a.updatedAt));
+    // Sort logic: Pinned first, then by updatedAt
+    const sorted = all.filter(a => !a.isArchived).sort((a, b) => {
+        if (a.isPinned && !b.isPinned) return -1;
+        if (!a.isPinned && b.isPinned) return 1;
+        return b.updatedAt - a.updatedAt;
+    });
+    setAnalyses(sorted);
+  };
+
+  useEffect(() => {
+    loadData();
   }, []);
 
   // Update quote when language changes or on mount
@@ -54,6 +63,12 @@ const Dashboard: React.FC = () => {
           return matchesSearch && matchesStatus;
       });
   }, [analyses, searchQuery, statusFilter]);
+
+  const handleTogglePin = (e: React.MouseEvent, id: string) => {
+      e.stopPropagation();
+      togglePinAnalysis(id);
+      loadData();
+  };
 
   const getStageLabel = (stage: AnalysisStage) => {
     switch (stage) {
@@ -144,8 +159,11 @@ const Dashboard: React.FC = () => {
                   }
               }}>
                 <div className="flex justify-between items-start">
-                  <div>
-                    <h3 className="font-bold text-lg text-text-main mb-1">{analysis.title || t.dashboard.untitled}</h3>
+                  <div className="pr-8">
+                    <h3 className="font-bold text-lg text-text-main mb-1 flex items-center">
+                        {analysis.isPinned && <Pin size={14} className="text-primary mr-1 fill-current" />}
+                        {analysis.title || t.dashboard.untitled}
+                    </h3>
                     <div className="flex flex-wrap items-center gap-2">
                         <span className={`text-xs font-bold px-2 py-1 rounded ${
                             analysis.stage === AnalysisStage.COMPLETED 
@@ -163,7 +181,13 @@ const Dashboard: React.FC = () => {
                         ))}
                     </div>
                   </div>
-                  <div className="text-primary opacity-50 group-hover:opacity-100 transition-opacity">
+                  <div className="text-primary opacity-50 group-hover:opacity-100 transition-opacity flex flex-col items-center gap-2">
+                    <button 
+                        onClick={(e) => handleTogglePin(e, analysis.id)}
+                        className={`p-1 rounded-full hover:bg-primary/10 ${analysis.isPinned ? 'text-primary' : 'text-text-muted'}`}
+                    >
+                        <Pin size={18} className={analysis.isPinned ? "fill-current" : ""} />
+                    </button>
                     {analysis.stage === AnalysisStage.COMPLETED ? <Eye size={20} /> : <Edit3 size={20} />}
                   </div>
                 </div>

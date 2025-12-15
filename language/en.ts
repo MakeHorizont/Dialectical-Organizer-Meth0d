@@ -131,7 +131,11 @@ export const en: TranslationData = {
     connectionsTitle: "SYSTEMIC CONNECTIONS",
     btnAddConnection: "Link to...",
     noConnections: "No connections found. Object is isolated (metaphysical).",
-    selectConnection: "Select object to link:"
+    selectConnection: "Select object to link:",
+
+    tacticsTitle: "TACTICS (CHECKLIST)",
+    tacticsPlaceholder: "New tactical task...",
+    btnAddItem: "Add Task"
   },
   archive: {
     title: "Archive",

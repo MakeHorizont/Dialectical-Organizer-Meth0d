@@ -131,7 +131,11 @@ export const ru: TranslationData = {
     connectionsTitle: "СИСТЕМНЫЕ СВЯЗИ",
     btnAddConnection: "Связать...",
     noConnections: "Связей не обнаружено. Объект изолирован (метафизично).",
-    selectConnection: "Выберите объект для связи:"
+    selectConnection: "Выберите объект для связи:",
+
+    tacticsTitle: "ТАКТИКА (ЧЕК-ЛИСТ)",
+    tacticsPlaceholder: "Новая тактическая задача...",
+    btnAddItem: "Добавить"
   },
   archive: {
     title: "Архив",

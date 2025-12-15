@@ -1,5 +1,5 @@
 
-import { Analysis, AnalysisStage, PraxisLogEntry } from '../types';
+import { Analysis, AnalysisStage, PraxisLogEntry, ActionItem } from '../types';
 
 const STORAGE_KEY = 'dialectical_organizer_data_v2'; 
 
@@ -66,7 +66,9 @@ export const createEmptyAnalysis = (): Analysis => {
     isArchived: false,
     tags: [],
     praxisLog: [],
-    relatedIds: [], // Initialize empty connections
+    relatedIds: [], 
+    checklist: [],
+    isPinned: false
   };
 };
 
@@ -87,6 +89,66 @@ export const addPraxisLog = (analysisId: string, text: string): void => {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(analyses));
     }
 };
+
+export const togglePinAnalysis = (id: string): void => {
+    const analyses = getAnalyses();
+    const target = analyses.find(a => a.id === id);
+    if (target) {
+        target.isPinned = !target.isPinned;
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(analyses));
+    }
+};
+
+// Tactical Checklist Management
+export const addActionItem = (analysisId: string, text: string): void => {
+    const analyses = getAnalyses();
+    const target = analyses.find(a => a.id === analysisId);
+    if (target) {
+        if (!target.checklist) target.checklist = [];
+        target.checklist.push({
+            id: crypto.randomUUID(),
+            text,
+            isDone: false
+        });
+        target.updatedAt = Date.now();
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(analyses));
+    }
+};
+
+export const toggleActionItem = (analysisId: string, itemId: string): void => {
+    const analyses = getAnalyses();
+    const target = analyses.find(a => a.id === analysisId);
+    if (target && target.checklist) {
+        const item = target.checklist.find(i => i.id === itemId);
+        if (item) {
+            item.isDone = !item.isDone;
+            
+            // Auto-log to Praxis if completed
+            if (item.isDone) {
+                if (!target.praxisLog) target.praxisLog = [];
+                target.praxisLog.unshift({
+                    id: crypto.randomUUID(),
+                    text: `[TACTICS] Completed: ${item.text}`,
+                    timestamp: Date.now()
+                });
+            }
+            
+            target.updatedAt = Date.now();
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(analyses));
+        }
+    }
+};
+
+export const deleteActionItem = (analysisId: string, itemId: string): void => {
+    const analyses = getAnalyses();
+    const target = analyses.find(a => a.id === analysisId);
+    if (target && target.checklist) {
+        target.checklist = target.checklist.filter(i => i.id !== itemId);
+        target.updatedAt = Date.now();
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(analyses));
+    }
+};
+
 
 // Creates a bi-directional link between two analyses
 export const toggleAnalysisConnection = (id1: string, id2: string): void => {
@@ -120,9 +182,6 @@ export const toggleAnalysisConnection = (id1: string, id2: string): void => {
     }
 };
 
-/**
- * Downloads all analyses as a JSON file.
- */
 export const exportData = (): void => {
   const data = localStorage.getItem(STORAGE_KEY);
   const parsedData = data ? JSON.parse(data) : [];
@@ -140,9 +199,6 @@ export const exportData = (): void => {
   URL.revokeObjectURL(url);
 };
 
-/**
- * Downloads a single analysis as a JSON file.
- */
 export const exportSingleAnalysis = (id: string): void => {
     const analysis = getAnalysisById(id);
     if (!analysis) return;
@@ -150,7 +206,6 @@ export const exportSingleAnalysis = (id: string): void => {
     const blob = new Blob([JSON.stringify(analysis, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     
-    // Clean title for filename
     const safeTitle = (analysis.title || 'Untitled').replace(/[^a-z0-9]/gi, '_').toLowerCase();
     const a = document.createElement('a');
     a.href = url;
@@ -161,11 +216,6 @@ export const exportSingleAnalysis = (id: string): void => {
     URL.revokeObjectURL(url);
 };
 
-/**
- * Imports analysis data from a JSON string, merging with existing data.
- * Merging strategy: IDs match -> overwrite. New IDs -> add.
- * Supports both array (backup) and single object (shared analysis).
- */
 export const importData = (jsonString: string): boolean => {
   try {
     const imported = JSON.parse(jsonString);
@@ -174,13 +224,11 @@ export const importData = (jsonString: string): boolean => {
     if (Array.isArray(imported)) {
         itemsToImport = imported;
     } else if (typeof imported === 'object' && imported !== null && imported.id) {
-        // Single analysis import
         itemsToImport = [imported];
     } else {
         throw new Error("Invalid format");
     }
     
-    // Basic validation of schema
     const isValid = itemsToImport.every(item => item.id && item.createdAt && item.stage);
     if (!isValid) throw new Error("Invalid data schema");
 
@@ -188,7 +236,6 @@ export const importData = (jsonString: string): boolean => {
     const map = new Map(current.map(i => [i.id, i]));
     
     itemsToImport.forEach((item: Analysis) => {
-        // Ensure imported items are compatible
         map.set(item.id, item);
     });
     

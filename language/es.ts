@@ -131,7 +131,11 @@ export const es: TranslationData = {
     connectionsTitle: "CONEXIONES SISTÉMICAS",
     btnAddConnection: "Vincular a...",
     noConnections: "No se encontraron conexiones. El objeto está aislado (metafísico).",
-    selectConnection: "Seleccionar objeto para vincular:"
+    selectConnection: "Seleccionar objeto para vincular:",
+
+    tacticsTitle: "TÁCTICA (LISTA DE VERIFICACIÓN)",
+    tacticsPlaceholder: "Nueva tarea táctica...",
+    btnAddItem: "Añadir Tarea"
   },
   archive: {
     title: "Archivos",
