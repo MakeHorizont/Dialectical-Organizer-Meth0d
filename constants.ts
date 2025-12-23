@@ -2,24 +2,24 @@
 import { QuestionStructure, CategoryType } from './types';
 
 export const QUESTION_STRUCTURE: QuestionStructure[] = [
-  // MODULE 1: HISTORICAL
+  // MODULE 1: TEMPORAL (Dynamics of development)
   {
-    id: 'q_history',
-    type: CategoryType.HISTORICAL,
+    id: 'q_temporal',
+    type: CategoryType.TEMPORAL,
   },
-  // MODULE 2: CLASS
+  // MODULE 2: INTERESTS (Resources and power)
   {
-    id: 'q_class_interest',
-    type: CategoryType.CLASS,
+    id: 'q_interests',
+    type: CategoryType.INTERESTS,
   },
-  // MODULE 3: SYSTEMIC
+  // MODULE 3: STRUCTURAL (Systemic links)
   {
-    id: 'q_system',
-    type: CategoryType.SYSTEMIC,
+    id: 'q_structural',
+    type: CategoryType.STRUCTURAL,
   },
-  // MODULE 4: IDEOLOGICAL
+  // MODULE 4: NARRATIVE (Public vs Real)
   {
-    id: 'q_ideology',
-    type: CategoryType.IDEOLOGICAL,
+    id: 'q_narrative',
+    type: CategoryType.NARRATIVE,
   }
 ];

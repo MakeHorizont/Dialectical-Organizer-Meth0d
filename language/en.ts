@@ -3,139 +3,131 @@ import { TranslationData } from '../types';
 
 export const en: TranslationData = {
   appName: "Meth0d",
-  slogan: "Mutatus, iterum resurgo melior.",
+  slogan: "Systemic Problem Solving Protocol.",
   nav: {
     current: "Operations",
     analysis: "New Analysis",
     archive: "Archive"
   },
   themeNames: {
-    neutral: "Neutral (Base)",
-    socialist: "Red Classic",
-    cozy: "Cozy Lamp",
-    brutal: "Neobrutalism",
-    amoled: "Void Black",
+    neutral: "Professional",
+    corporate: "Corporate",
+    cozy: "Cozy",
+    brutal: "Engineering",
+    amoled: "Midnight",
     premium: "Premium",
-    kitty: "Pink Kitty",
-    pirate: "Jolly Roger"
+    cyberpunk: "Cyberpunk",
+    minimalist: "Minimal",
+    kitty: "Pink Kitty"
   },
   tutorial: {
-    welcome: "Welcome.",
-    startBtn: "Start Course",
+    welcome: "System Initialized.",
+    startBtn: "Start Tutorial",
     skipBtn: "Skip",
     nextBtn: "Next",
     finishBtn: "To Practice",
     slides: {
       intro: {
-        title: "Why this tool?",
-        content: "Simple to-do lists fail against complex problems.\n\nTo navigate a messy situation, you need to see not just the tasks, but the forces behind them. 'Black and white' logic doesn't work here. You need a systemic approach."
+        title: "Why this works?",
+        content: "To-do lists manage symptoms. Meth0d manages systems.\n\nTo change reality, you must see the forces creating it. This app switches your brain from 'task mode' to 'architect mode'."
       },
       foundation: {
-        title: "Principle 1: Materialism",
+        title: "Phase 1: Realism",
         analogy: "FOUNDATION",
-        content: "Ideas and wishes are secondary. Resources, conditions, and facts are primary.\n\nAny analysis starts not with 'what we want,' but 'what we actually have.' Don't ignore harsh reality; build strategy on the solid ground of facts."
+        content: "Resources and facts always precede words and wishes.\n\nWe start by mapping reality: what actually exists, not what we hope to see. Facts are the only solid ground."
       },
       walls: {
-        title: "Principle 2: Interests",
-        analogy: "WALLS",
-        content: "Every system contains a conflict of interests.\n\nBehind every problem lies the question: who benefits? Who gains resources, and who spends them? Don't look for malice or stupidity—look for the economic interests of the participants."
+        title: "Phase 2: Interests",
+        analogy: "DRIVERS",
+        content: "Every system is driven by the interests of its participants.\n\nWho gets the resources, and who spends them? Where is the balance broken? Without understanding interests, you cannot build a stable solution."
       },
       roof: {
-        title: "Principle 3: Development",
-        analogy: "GOAL",
-        content: "Contradiction is the engine of development. You don't need to 'smooth corners' or find a compromise that satisfies no one.\n\nYou need to find the root of the contradiction and resolve it, creating a new, more efficient system."
+        title: "Phase 3: Transformation",
+        analogy: "BREAKTHROUGH",
+        content: "Conflict is a point of maximum tension and a source of energy for growth.\n\nWe don't look for a compromise. We look for a way to restructure the system so the problem disappears entirely."
       },
       method: {
-        title: "Summary: Meth0d",
+        title: "Outcome: Result",
         analogy: "SPIRAL",
-        content: "In dialectics, each new loop of the spiral does not just repeat the previous one, but makes a qualitative leap.\n\n'Mutatus, iterum resurgo melior' — Changed, I rise again improved.\n\nDevelopment goes not just wide, but up. Your task is to turn quantity (problems) into new quality (solutions)."
+        content: "Every solved problem is a step up the spiral of efficiency.\n\n'Mutatus, iterum resurgo melior' — Changed, I rise again improved.\n\nStart your analysis when you feel stuck."
       }
     }
   },
   stages: {
-    init: "Analysis Object",
-    modules: "Phase 1: Decomposition",
-    synthesis: "Phase 2: Contradiction",
-    strategy: "Phase 3: Strategy",
-    risks: "Phase 4: Audit",
-    completed: "Briefing Ready"
+    init: "Identification",
+    modules: "Phase 1: Data Gathering",
+    synthesis: "Phase 2: Tension Point",
+    strategy: "Phase 3: Resolution",
+    risks: "Phase 4: Risk Audit",
+    completed: "Protocol Ready"
   },
   dashboard: {
-    title: "Workspace",
-    emptyTitle: "Operational Pause",
-    emptyDesc: "Situation stable. Activate protocol if a new problem arises.",
-    activeTasks: "In Progress",
+    title: "Dashboard",
+    emptyTitle: "System Idle",
+    emptyDesc: "Input object data to begin systemic analysis.",
+    activeTasks: "Active",
     untitled: "Object #",
-    searchPlaceholder: "Search by thesis...",
+    searchPlaceholder: "Search thesis...",
     filterAll: "All",
     filterActive: "Active",
-    filterDone: "Done"
+    filterDone: "Completed"
   },
   wizard: {
-    titleNew: "Analysis Setup",
+    titleNew: "Initialize Protocol",
     titleObject: "Subject of Study",
-    placeholderName: "Title (e.g. 'Project Delay')",
-    placeholderObject: "Describe the situation dryly and factually. What is happening?",
-    descName: "Short identifier.",
-    descObject: "Facts only. Save emotions for later.",
+    placeholderName: "Title (e.g. 'Project Stagnation')",
+    placeholderObject: "Dry description of facts. No fluff.",
+    descName: "Short name.",
+    descObject: "What exactly are we analyzing?",
     btnNext: "Next",
     btnBack: "Back",
     btnSave: "Save",
-    btnFinish: "Complete",
-    contextLabel: "Context",
-
-    tagsLabel: "Labels",
-    tagsPlaceholder: "Comma separated categories (e.g. Work, Urgent)",
-    
+    btnFinish: "Finish",
+    contextLabel: "System Memory",
+    tagsLabel: "Categories",
+    tagsPlaceholder: "Comma separated tags",
     synthesisTitle: "Phase 2: Key Contradiction",
-    synthesisDesc: "Look at Phase 1 answers. What is the core conflict? Which two forces are colliding?",
-    synthesisPlaceholder: "The main contradiction is between...",
-    
-    strategyTitle: "Phase 3: Strategic Resolution",
-    strategyDesc: "How can we use this knowledge? Where is the leverage point?",
-    vulnLabel: "System Vulnerabilities:",
-    vulnPlaceholder: "Where does the system fail? Where do interests diverge?",
-    oppLabel: "Our Opportunities:",
-    oppPlaceholder: "How to turn this to our advantage? Concrete steps.",
-
-    risksTitle: "Phase 4: Verification (Audit)",
-    risksDesc: "Critical view. What did we miss?",
-    risksLabel: "Risks & Blind Spots:",
-    risksPlaceholder: "What could go wrong? Unaccounted factors.",
-    
-    hintLabel: "Hint:",
-    loading: "Loading modules...",
-
+    synthesisDesc: "Find the point where two incompatible interests or requirements collide.",
+    synthesisPlaceholder: "Conflict between...",
+    strategyTitle: "Phase 3: Action Plan",
+    strategyDesc: "What is the leverage point to change the situation?",
+    vulnLabel: "System Weaknesses:",
+    vulnPlaceholder: "Where is the structure most vulnerable?",
+    oppLabel: "Growth Zones:",
+    oppPlaceholder: "How to use conflict for development?",
+    risksTitle: "Phase 4: Audit",
+    risksDesc: "External view: why could this plan fail?",
+    risksLabel: "Risks and Blind Spots:",
+    risksPlaceholder: "What did we miss?",
+    hintLabel: "Analyst Hint:",
+    loading: "Loading algorithms...",
     templatesTitle: "Standard Scenarios"
   },
   view: {
     objectLabel: "OBJECT",
     contradictionLabel: "CORE CONTRADICTION",
     briefingTitle: "STRATEGIC REPORT",
-    modulesTitle: "DATA MATRIX",
-    strategyTitle: "ACTION PLAN",
+    modulesTitle: "ANALYSIS MATRIX",
+    strategyTitle: "RESOLUTION VECTOR",
     risksTitle: "RISKS",
     btnEdit: "Edit",
-    btnShare: "Share",
+    btnShare: "Export/Share",
     btnPrint: "Print / PDF",
-    btnExportMD: "Download .MD",
-    btnExportJSON: "Download .JSON",
+    btnExportMD: "Markdown",
+    btnExportJSON: "JSON",
     btnArchive: "Archive",
-    confirmArchive: "Complete this task?",
-    shareSuccess: "Copied to clipboard.",
-
-    praxisTitle: "PRAXIS LOG",
-    praxisPlaceholder: "Log an event, result, or new observation...",
-    btnAddLog: "Add Entry",
-
-    connectionsTitle: "SYSTEMIC CONNECTIONS",
-    btnAddConnection: "Link to...",
-    noConnections: "No connections found. Object is isolated (metaphysical).",
-    selectConnection: "Select object to link:",
-
-    tacticsTitle: "TACTICS (CHECKLIST)",
-    tacticsPlaceholder: "New tactical task...",
-    btnAddItem: "Add Task"
+    confirmArchive: "Archive this object?",
+    shareSuccess: "Data copied.",
+    praxisTitle: "EXECUTION LOG",
+    praxisPlaceholder: "Event, change, result...",
+    btnAddLog: "Record",
+    connectionsTitle: "SYSTEMIC LINKS",
+    btnAddConnection: "Link...",
+    noConnections: "No links established.",
+    selectConnection: "Select related object:",
+    tacticsTitle: "TACTICAL PLAN",
+    tacticsPlaceholder: "Task...",
+    btnAddItem: "Add"
   },
   archive: {
     title: "Archive",
@@ -143,79 +135,160 @@ export const en: TranslationData = {
     btnRestore: "Restore",
     btnBurn: "Delete",
     confirmDelete: "Delete permanently?",
-    labelArchive: "Done",
-    backupSection: "Data Management",
-    btnExport: "Download Backup",
-    btnImport: "Import Backup",
-    dragDropLabel: "Drag & Drop backup file here",
-    orClick: "or click to select file",
-    importSuccess: "Data restored successfully.",
-    importError: "Failed to read file."
+    labelArchive: "Archive",
+    backupSection: "Backups",
+    btnExport: "Download backup",
+    btnImport: "Upload backup",
+    dragDropLabel: "Drop JSON here",
+    orClick: "or click to browse",
+    importSuccess: "Restoration complete.",
+    importError: "Format error."
   },
   questions: {
-    q_history: {
-      categoryLabel: "History",
-      text: "Cause and Effect: How did we get here?",
-      hint: "Find material causes. What events or decisions led to the current state?",
-      placeholder: "Historically this formed due to..."
+    q_temporal: {
+      categoryLabel: "Temporal",
+      text: "Dynamics: How did this evolve?",
+      hint: "Find the chain of events. What actions led to the current state?",
+      placeholder: "Development phases..."
     },
-    q_class_interest: {
+    q_interests: {
       categoryLabel: "Interests",
-      text: "Benefit Balance: Who benefits?",
-      hint: "Whose interests does the current situation serve? Who gains resources, who pays? Look for the economic basis.",
-      placeholder: "This benefits..., while..."
+      text: "Stakeholders: Who benefits?",
+      hint: "Whose interest does the current chaos or order serve? Who controls the resources?",
+      placeholder: "Power groups and goals..."
     },
-    q_system: {
-      categoryLabel: "System",
-      text: "Connections: What does this affect?",
-      hint: "How is this element connected to others? If we change this, what else breaks or fixes?",
-      placeholder: "This affects the system by..."
+    q_structural: {
+      categoryLabel: "Structural",
+      text: "Links: What does this affect?",
+      hint: "How is this node connected to other parts of your project or life?",
+      placeholder: "Interdependencies..."
     },
-    q_ideology: {
-      categoryLabel: "Perception",
-      text: "Form vs. Essence: What are we told?",
-      hint: "How is the situation presented officially or externally? What is the difference between the 'image' and reality?",
-      placeholder: "Officially it is said that..., but in reality..."
+    q_narrative: {
+      categoryLabel: "Narrative",
+      text: "Image vs Reality: What is the message?",
+      hint: "What is the difference between the external description and the real content?",
+      placeholder: "Official version vs Facts..."
     }
   },
   quotes: [
-    { text: "Philosophers have only interpreted the world in various ways; the point is to change it.", author: "Karl Marx" },
-    { text: "The history of all hitherto existing society is the history of class struggles.", author: "Karl Marx" },
-    { text: "History repeats itself, first as tragedy, second as farce.", author: "Karl Marx" },
-    { text: "There are no morals in politics; there is only expedience.", author: "V.I. Lenin" },
-    { text: "A lie told often enough becomes the truth.", author: "V.I. Lenin" },
-    { text: "Quantity has a quality all its own.", author: "J.V. Stalin" },
-    { text: "Political power grows out of the barrel of a gun.", author: "Mao Zedong" },
-    { text: "Freedom is the recognition of necessity.", author: "Friedrich Engels" },
-    { text: "No man ever steps in the same river twice.", author: "Heraclitus" },
-    { text: "Better to die standing than to live on your knees.", author: "Che Guevara" },
-    { text: "Condemn me. It does not matter. History will absolve me.", author: "Fidel Castro" },
-    { text: "Pessimism of the intellect, optimism of the will.", author: "Antonio Gramsci" }
+    { text: "Everything flows, nothing stays still. You cannot step into the same river twice.", author: "Heraclitus" },
+    { text: "Philosophers have only interpreted the world; the point is to change it.", author: "Folk Wisdom" },
+    { text: "The history of all society is the history of resource struggle.", author: "Builder's Proverb" },
+    { text: "Being determines consciousness: how you live is how you think.", author: "Folk Wisdom" },
+    { text: "Freedom is the recognition of necessity.", author: "Unknown Sage" },
+    { text: "Labor created man, and labor shall set him free.", author: "System Analyst" },
+    { text: "Drop by drop, the stone is worn; quantity becomes quality.", author: "Folk Wisdom" },
+    { text: "Nothing is permanent except change.", author: "Ancient Sage" },
+    { text: "Contradiction is the engine of all development.", author: "Unknown Sage" },
+    { text: "To build a bridge, you need physics, not just strong wishes.", author: "Engineering Maxim" },
+    { text: "Unity and struggle of opposites is the law of life.", author: "Folk Wisdom" },
+    { text: "Seek truth in actions and resources, not in words.", author: "Builder's Proverb" },
+    { text: "He who does not work, neither shall he eat.", author: "Folk Wisdom" },
+    { text: "One man is no man; strength lies in the collective mind.", author: "Unity Proverb" },
+    { text: "Knowledge is a weapon only when directed at action.", author: "System Analyst" },
+    { text: "System complexity is the measure of our misunderstanding.", author: "Engineering Maxim" },
+    { text: "From each according to ability, to each according to need.", author: "Eastern Parable" },
+    { text: "Revolution in affairs begins with revolution in the mind.", author: "Builder's Proverb" },
+    { text: "Don't wait for nature's mercy; take what is needed.", author: "Folk Wisdom" },
+    { text: "Theory without practice is dead; practice without theory is blind.", author: "Unknown Sage" },
+    { text: "Matter is primary; thoughts are but its reflection.", author: "Folk Wisdom" },
+    { text: "A problem is but a growth point hidden by conflict.", author: "System Analyst" },
+    { text: "All power is a question of resource control.", author: "Builder's Proverb" },
+    { text: "True democracy is when creators manage their creations.", author: "Folk Wisdom" },
+    { text: "Time is the only capital that cannot be recovered.", author: "Unknown Sage" },
+    { text: "The world is not a collection of things, but a process of events.", author: "System Analyst" },
+    { text: "Every piece of knowledge is a tool for a better world.", author: "Builder's Proverb" },
+    { text: "Justice is the mathematically correct distribution of effort.", author: "Engineering Maxim" },
+    { text: "He who owns the tools, owns the future.", author: "Folk Wisdom" },
+    { text: "Ideas become a force when they grasp the masses.", author: "Builder's Proverb" },
+    { text: "The weapon of criticism cannot replace the criticism of weapons.", author: "Unknown Sage" },
+    { text: "All that exists deserves to perish to make room for the new.", author: "Ancient Sage" },
+    { text: "Equality in labor is the root of all other equalities.", author: "Folk Wisdom" },
+    { text: "Systems seek rest, but life is an eternal dance of conflict.", author: "System Analyst" },
+    { text: "Facts are stubborn things; they cannot be ignored forever.", author: "Folk Wisdom" },
+    { text: "All development is a spiral: return to the old on a new base.", author: "Unknown Sage" },
+    { text: "Labor is the father of wealth, and earth is its mother.", author: "Ancient Maxim" },
+    { text: "Man is the sum of all social relations.", author: "System Analyst" },
+    { text: "No one will deliver us: not god, nor king, nor hero.", author: "Builder's Proverb" },
+    { text: "Organization is a force multiplier.", author: "Engineering Maxim" },
+    { text: "He who forgets the past is condemned to repeat it.", author: "Folk Wisdom" },
+    { text: "All progress is paid for by the struggle against the old.", author: "Builder's Proverb" },
+    { text: "The world is knowable through physics and economics.", author: "Unknown Sage" },
+    { text: "Art is the hammer with which we shape reality.", author: "System Analyst" },
+    { text: "Collective labor is the path to true individuality.", author: "Folk Wisdom" },
+    { text: "Doubt is the beginning of the journey to truth.", author: "Unknown Sage" },
+    { text: "Progress is the transition from abstract to concrete.", author: "System Analyst" },
+    { text: "Stakeholders change, resource interests remain.", author: "Builder's Proverb" },
+    { text: "No problem can be solved at the level it was created.", author: "Albert Einstein" },
+    { text: "Logic is the anatomy of thinking.", author: "Unknown Sage" },
+    { text: "The future is built today by our hands and blueprints.", author: "Folk Wisdom" },
+    { text: "Class peace is an illusion hiding the strong's dictate.", author: "Builder's Proverb" },
+    { text: "Truth is that which works for the majority's development.", author: "System Analyst" },
+    { text: "Think globally, act locally — the path to change.", author: "Folk Wisdom" },
+    { text: "Every step forward is a rejection of old habits.", author: "Unknown Sage" },
+    { text: "Strength in unity, weakness in division.", author: "Folk Wisdom" },
+    { text: "Objectivity is loyalty to facts over desires.", author: "System Analyst" },
+    { text: "Development is the negation of negation.", author: "Unknown Sage" },
+    { text: "He who would build a castle must first dig a moat.", author: "Ancient Proverb" },
+    { text: "Knowledge is the only wealth that grows when shared.", author: "Eastern Wisdom" },
+    { text: "Hardships are the litmus test for any system.", author: "Engineering Maxim" },
+    { text: "The world is an open book for those who read resources.", author: "Builder's Proverb" },
+    { text: "Consciousness is the highest form of organized matter.", author: "Unknown Sage" },
+    { text: "Truth is always concrete.", author: "Ancient Sage" },
+    { text: "Discipline is the key to victory over chaos.", author: "Builder's Proverb" },
+    { text: "The best way to predict the future is to create it.", author: "Peter Drucker" },
+    { text: "Economy is the base; everything else is the superstructure.", author: "System Analyst" },
+    { text: "Epochal shifts are shifts in the modes of production.", author: "Builder's Proverb" },
+    { text: "Man is free only when not dependent on another's whim.", author: "Folk Wisdom" },
+    { text: "Reason is the survival tool of a species in struggle.", author: "Unknown Sage" },
+    { text: "Progress is inevitable, like the rising sun.", author: "Folk Wisdom" },
+    { text: "Success is the result of systemic effort, not luck.", author: "Engineering Maxim" },
+    { text: "Each is the creator of history, but not in chosen conditions.", author: "System Analyst" },
+    { text: "Cooperation is a new form of productive power.", author: "Folk Wisdom" },
+    { text: "Science is the eternal search for contradictions.", author: "Unknown Sage" },
+    { text: "Every truth begins as a heresy.", author: "Folk Wisdom" },
+    { text: "The only way to defeat fear is to understand its root.", author: "System Analyst" },
+    { text: "The world belongs to those who improve it with their hands.", author: "Builder's Proverb" },
+    { text: "A just society is one without exploitation.", author: "Folk Wisdom" },
+    { text: "Crisis is a chance for a qualitative leap.", author: "Unknown Sage" },
+    { text: "Never give up until all systemic options are exhausted.", author: "Engineering Maxim" },
+    { text: "Ideas don't fall from the sky; they grow from material needs.", author: "Builder's Proverb" },
+    { text: "Culture is the generational experience packed into meanings.", author: "System Analyst" },
+    { text: "Respect for facts is the beginning of wisdom.", author: "Folk Wisdom" },
+    { text: "Understanding is the prelude to action.", author: "Unknown Sage" },
+    { text: "A collective is a product, not a sum, of qualities.", author: "Engineering Maxim" },
+    { text: "The past is the foundation for the tower of the future.", author: "Folk Wisdom" },
+    { text: "Every piece of knowledge must serve life.", author: "System Analyst" },
+    { text: "Paradigm shifts are painful but necessary.", author: "Unknown Sage" },
+    { text: "The power of thought is in its link to reality.", author: "Builder's Proverb" },
+    { text: "Creativity is the highest form of labor.", author: "Folk Wisdom" },
+    { text: "The world is an infinite field for transformation.", author: "Unknown Sage" },
+    { text: "System stability is in its flexibility and renewal.", author: "Engineering Maxim" },
+    { text: "Every idle minute is a lost resource for the future.", author: "Builder's Proverb" },
+    { text: "Everything great begins with a small step.", author: "Folk Wisdom" },
+    { text: "The laws of nature know no exceptions.", author: "Unknown Sage" },
+    { text: "A true leader serves the interests of the majority.", author: "Folk Wisdom" },
+    { text: "Thinking is a dialogue with reality.", author: "System Analyst" },
+    { text: "The end is but the beginning of a new cycle.", author: "Folk Wisdom" }
   ],
   feedback: [
-    "Essence captured.",
-    "Facts confirmed.",
-    "Illusions discarded.",
-    "Connections found."
+    "Data synced.",
+    "Links established.",
+    "Contradiction localized.",
+    "Analysis confirmed."
   ],
   templates: [
     {
+      id: "bottleneck",
+      label: "Bottleneck",
+      title: "System constraint in [Process]",
+      thesis: "Performance drops due to lack of resources at a critical point."
+    },
+    {
       id: "conflict",
       label: "Conflict",
-      title: "Conflict of Interest in [Team/Project]",
-      thesis: "A clash between Group A and Group B is observed. Resources are limited. Compromise is impossible."
-    },
-    {
-      id: "stagnation",
-      label: "Stagnation",
-      title: "Stagnation of [Project]",
-      thesis: "Growth has stopped. Old methods no longer yield results, but new ones have not yet been implemented."
-    },
-    {
-      id: "personal",
-      label: "Personal",
-      title: "Personal Dead End in [Area]",
-      thesis: "Subjective feeling of an impasse. Desires do not align with capabilities or resources."
+      title: "Interest conflict in [Team]",
+      thesis: "Clash of goals between different participants."
     }
   ]
 };

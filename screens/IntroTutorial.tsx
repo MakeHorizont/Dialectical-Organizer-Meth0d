@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 import { Button } from '../components/Button';
-import { ChevronRight, BookOpen, Hammer, Layout, ArrowUpCircle } from 'lucide-react';
+import { ChevronRight, ChevronLeft, BrainCircuit, Activity, Network, Target, Sparkles } from 'lucide-react';
 
 const IntroTutorial: React.FC = () => {
     const { t } = useLanguage();
@@ -13,27 +13,27 @@ const IntroTutorial: React.FC = () => {
     const slides = [
         {
             id: 'intro',
-            icon: <BookOpen size={64} className="text-primary" />,
+            icon: <BrainCircuit size={64} className="text-primary" />,
             data: t.tutorial.slides.intro
         },
         {
             id: 'foundation',
-            icon: <Layout size={64} className="text-secondary" />,
+            icon: <Activity size={64} className="text-secondary" />,
             data: t.tutorial.slides.foundation
         },
         {
             id: 'walls',
-            icon: <Hammer size={64} className="text-warning" />,
+            icon: <Network size={64} className="text-warning" />,
             data: t.tutorial.slides.walls
         },
         {
             id: 'roof',
-            icon: <ArrowUpCircle size={64} className="text-danger" />,
+            icon: <Target size={64} className="text-danger" />,
             data: t.tutorial.slides.roof
         },
         {
             id: 'method',
-            icon: <div className="text-6xl">☭</div>,
+            icon: <Sparkles size={64} className="text-primary" />,
             data: t.tutorial.slides.method
         }
     ];
@@ -45,6 +45,12 @@ const IntroTutorial: React.FC = () => {
             setStep(step + 1);
         } else {
             completeTutorial();
+        }
+    };
+
+    const handleBack = () => {
+        if (step > 0) {
+            setStep(step - 1);
         }
     };
 
@@ -94,13 +100,21 @@ const IntroTutorial: React.FC = () => {
                 </div>
 
                 {/* Actions */}
-                <div className="space-y-3">
-                    <Button variant="primary" fullWidth onClick={handleNext}>
+                <div className="flex gap-3">
+                    {step > 0 && (
+                        <Button variant="outline" className="flex-1" onClick={handleBack}>
+                            <ChevronLeft className="mr-2" size={18} />
+                            {t.wizard.btnBack}
+                        </Button>
+                    )}
+                    <Button variant="primary" className={step === 0 ? "w-full" : "flex-[2]"} onClick={handleNext}>
                         {step === slides.length - 1 ? t.tutorial.finishBtn : t.tutorial.nextBtn} 
                         <ChevronRight className="ml-2" size={18} />
                     </Button>
-                    
-                    <Button variant="ghost" fullWidth onClick={completeTutorial} className="text-xs">
+                </div>
+                
+                <div className="text-center">
+                    <Button variant="ghost" onClick={completeTutorial} className="text-xs">
                         {t.tutorial.skipBtn}
                     </Button>
                 </div>

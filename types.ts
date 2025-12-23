@@ -1,7 +1,7 @@
 
 export type LanguageCode = 'ru' | 'en' | 'es' | 'zh' | 'hi';
 
-export type ThemeId = 'neutral' | 'socialist' | 'cozy' | 'brutal' | 'amoled' | 'premium' | 'kitty' | 'pirate';
+export type ThemeId = 'neutral' | 'corporate' | 'cozy' | 'brutal' | 'amoled' | 'premium' | 'cyberpunk' | 'minimalist' | 'kitty';
 
 export enum AnalysisStage {
   INIT = 'INIT',
@@ -13,10 +13,10 @@ export enum AnalysisStage {
 }
 
 export enum CategoryType {
-  HISTORICAL = 'HISTORICAL', // Module 1
-  CLASS = 'CLASS',           // Module 2
-  SYSTEMIC = 'SYSTEMIC',     // Module 3
-  IDEOLOGICAL = 'IDEOLOGICAL' // Module 4
+  TEMPORAL = 'TEMPORAL',
+  INTERESTS = 'INTERESTS',
+  STRUCTURAL = 'STRUCTURAL',
+  NARRATIVE = 'NARRATIVE'
 }
 
 export interface Answer {
@@ -54,8 +54,8 @@ export interface Analysis {
   tags?: string[];
   praxisLog?: PraxisLogEntry[];
   relatedIds?: string[];
-  checklist?: ActionItem[]; // New: Tactical action items
-  isPinned?: boolean;       // New: Priority status
+  checklist?: ActionItem[];
+  isPinned?: boolean;
 }
 
 export interface Quote {
@@ -154,29 +154,23 @@ export interface TranslationData {
     btnSave: string;
     btnFinish: string;
     contextLabel: string;
-    
     tagsLabel: string;
     tagsPlaceholder: string;
-
     synthesisTitle: string;
     synthesisDesc: string;
     synthesisPlaceholder: string;
-    
     strategyTitle: string;
     strategyDesc: string;
     vulnLabel: string;
     vulnPlaceholder: string;
     oppLabel: string;
     oppPlaceholder: string;
-    
     risksTitle: string;
     risksDesc: string;
     risksLabel: string;
     risksPlaceholder: string;
-    
     hintLabel: string;
     loading: string;
-    
     templatesTitle: string;
   };
   view: {
@@ -194,16 +188,13 @@ export interface TranslationData {
     btnArchive: string;
     confirmArchive: string;
     shareSuccess: string;
-    
     praxisTitle: string;
     praxisPlaceholder: string;
     btnAddLog: string;
-
     connectionsTitle: string;
     btnAddConnection: string;
     noConnections: string;
     selectConnection: string;
-
     tacticsTitle: string;
     tacticsPlaceholder: string;
     btnAddItem: string;
